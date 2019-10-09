@@ -1,7 +1,14 @@
 /* jshint expr: true */
 //  Initiate variables that need to be globally accessible
-var scores, roundScore, activePlayer, gamePlaying;
-
+/******************************************************************************
+ *  CHALLENGES:                                                               *
+ *  3.  Add second dice to the game                                           *
+ *        Player still loses current score if 1 of them is a 1                *
+ *        (Hint: Reposition dice with CSS)                                    *
+ ******************************************************************************/
+var scores, roundScore, activePlayer, gamePlaying, endScore; //prevDice,
+endScore = document.getElementById('set-score').value;
+console.log(endScore);
 //  Prepares the game from a beginning state
 init();
 
@@ -15,8 +22,10 @@ function init() {
       Prevents .btn-roll and btn hold from being clicked when false */
   gamePlaying = true;
 
+
   //  Hides dice
-  document.querySelector('.dice').style.display = 'none';
+  document.querySelector('.dice1').style.display = 'none';
+  document.querySelector('.dice2').style.display = 'none';
 
   //  Sets Player 1 & 2 global score to match scores array
   document.getElementById('score-0').textContent = scores[0];
@@ -52,23 +61,36 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         When gamePlaying = false; button disabled game stopped  */
   if (gamePlaying) {
     //  1. Generate Random number (See Dice Logic below)
-    var dice = Math.floor((Math.random() * 6) + 1);
+    var dice1 = Math.floor((Math.random() * 6) + 1);
+    var dice2 = Math.floor((Math.random() * 6) + 1);
+
+    // if (prevDice === dice && dice === 6) {
+    //   scores[activePlayer] = 0;
+    //   //  Updates activePlayer UI score to what was calculated
+    //   document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+    //   nextPlayer();
+    // }
 
     //  2. Display the result
-    var diceDOM = document.querySelector('.dice'); // Creates var shortcut
-
+    var diceDOM = document.querySelector('.dice1'); // Creates var shortcut
+    var diceDOM2 = document.querySelector('.dice2');
     //  Selects <img src> block with dice class so we can change the image
     diceDOM.style.display = 'block';
+    diceDOM2.style.display = 'block';
     //  Replaces image with whatever number dice was rolled
-    diceDOM.src = 'dice-' + dice + '.png';
+    diceDOM.src = 'dice-' + dice1 + '.png';
+    diceDOM2.src = 'dice-' + dice2 + '.png';
 
     //  3a. Update the round score IF the rolled number is NOT 1
-    if (dice !== 1) {
+    if (dice1 !== 1 && dice2 !== 1) {
       //  Add score
-      roundScore += dice; // adds number rolled to roundScore
+      roundScore += dice1 + dice2; // adds number rolled to roundScore
 
       //  Changes Current score for current player
       document.querySelector('#current-' + activePlayer).textContent = roundScore;
+
+      //Save this roll as prevDice
+      // prevDice = dice;
     } else {
       //  3b. Next player IF the rolled number IS 1
       nextPlayer();
@@ -91,7 +113,7 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
     // 3. Check if player won the game
-    if (scores[activePlayer] >= 10) {
+    if (scores[activePlayer] >= endScore) {
       // Ensures if score is reached Roll and Hold buttons are disabled
       gamePlaying = false;
 
@@ -105,13 +127,20 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
       document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
 
       // Removes active css class from activePlayer (since they played last)
-      document.querySelector('.player-' + activePlayer + '- panel').classList.remove('active');
+      document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
     } else {
       // 4. Next Player (Total score still < 100)
       nextPlayer(); // Runs nextPlayer function
     }
   }
 
+});
+
+//  Set Score Button
+document.querySelector('.btn-set-score').addEventListener('click', function() {
+  endScore = document.getElementById('set-score').value;
+  console.log(endScore);
+  init();
 });
 
 /*  Handles transition to next player
@@ -132,7 +161,8 @@ function nextPlayer() {
   document.querySelector('.player-1-panel').classList.toggle('active');
 
   //  Hide dice
-  document.querySelector('.dice').style.display = 'none';
+  document.querySelector('.dice1').style.display = 'none';
+  document.querySelector('.dice2').style.display = 'none';
 }
 
 // Handles New Game Button, runs init function on click

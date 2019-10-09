@@ -6,7 +6,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    
+
 }
 
 .clearfix::after {
@@ -16,14 +16,14 @@
 }
 
 body {
-    background-image: linear-gradient(rgba(62, 20, 20, 0.4), rgba(62, 20, 20, 0.4)), url(back.jpg);
+    background-image: linear-gradient(#263238, #4d8c84);
     background-size: cover;
     background-position: center;
     font-family: Lato;
     font-weight: 300;
     position: relative;
     height: 100vh;
-    color: #555;
+    color: #263238;
 }
 
 .wrapper {
@@ -32,7 +32,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
+    background-color: #4d8c84;
     box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.3);
     overflow: hidden;
 }
@@ -66,25 +66,25 @@ body {
     text-align: center;
     font-size: 80px;
     font-weight: 100;
-    color: #EB4D4D;
+    color: #f5848c;
     margin-bottom: 130px;
 }
 
-.active { background-color: #f7f7f7; }
+.active { background-color: #68b2a7; }
 .active .player-name { font-weight: 300; }
 
 .active .player-name::after {
     content: "\2022";
     font-size: 47px;
     position: absolute;
-    color: #EB4D4D;
+    color: #f5848c;
     top: -7px;
     right: 10px;
-    
+
 }
 
 .player-current-box {
-    background-color: #EB4D4D;
+    background-color: #f5848c;
     color: #fff;
     width: 40%;
     margin: 0 auto;
@@ -96,7 +96,7 @@ body {
     text-transform: uppercase;
     margin-bottom: 10px;
     font-size: 12px;
-    color: #222;
+    color: #263238;
 }
 
 .player-current-score {
@@ -108,7 +108,7 @@ button {
     width: 200px;
     left: 50%;
     transform: translateX(-50%);
-    color: #555;
+    color: #263238;
     background: none;
     border: none;
     font-family: Lato;
@@ -127,7 +127,7 @@ button:focus {
 }
 
 i {
-    color: #EB4D4D;
+    color: #f5848c;
     display: inline-block;
     margin-right: 15px;
     font-size: 32px;
@@ -140,11 +140,31 @@ i {
 .btn-new { top: 45px;}
 .btn-roll { top: 403px;}
 .btn-hold { top: 467px;}
+.btn-set-score { top: 550px;}
 
-.dice {
+#set-score  {
+    position: absolute;
+    text-align: center;
+    font-family: Lato;
+    top: 515px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8%;
+}
+
+.dice1 {
     position: absolute;
     left: 50%;
-    top: 178px;
+    top: 125px;
+    transform: translateX(-50%);
+    height: 100px;
+    box-shadow: 0px 10px 60px rgba(0, 0, 0, 0.10);
+}
+
+.dice2 {
+    position: absolute;
+    left: 50%;
+    top: 265px;
     transform: translateX(-50%);
     height: 100px;
     box-shadow: 0px 10px 60px rgba(0, 0, 0, 0.10);
