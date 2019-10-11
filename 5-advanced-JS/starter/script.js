@@ -100,7 +100,7 @@
 //
 // Person.prototype.lastName = 'Smith';
 //
-// // new creates an EMPTY object (IMPROTANT)
+// // new creates an EMPTY object (IMPORTANT)
 // var john = new Person('john', 1990, 'teacher');
 // var jane = new Person('Jane', 1969, 'designer');
 // var mark = new Person('Mark', 1948, 'retired');
@@ -483,7 +483,85 @@
   7.  Suppose this code would be a plugin for other programmers to use
       Make sure that all your code is private and doesn't interfere
       with other programmers code
+
+  8.  After you display the result:
+        display next random question so game never ends
+
+  9.  Let user type exit to end programmers
+
+  10. Track users score
+
+  11. Display score in console
 */
+var score = 0;
+var Question = function(desc, answers, correctAnswer) {
+  this.desc = desc;
+  this.answers = answers;
+  this.correctAnswer = correctAnswer;
+};
+
+var question1 = new Question('This is a test, answer 0', ['answer 0', 'answer 1', 'answer 2'], 0);
+var question2 = new Question('This is a test, answer 1', ['answer 0', 'answer 1', 'answer 2'], 1);
+var question3 = new Question('This is a test, answer 2', ['answer 0', 'answer 1', 'answer 2'], 2);
+
+var questionPool = [question1, question2, question3];
+
+var checkAnswer = function(userAnswer, correctAnswer){
+  if (userAnswer == correctAnswer){
+    return 'Correct!';
+  } else{
+    return userAnswer;
+  }
+}
+
+var pickRandom = function(questionPool){
+  var questionNumber = Math.floor(Math.random() * questionPool.length);
+  var pickedQuestion = questionPool[questionNumber];
+  console.log(questionNumber + '. ' + pickedQuestion.desc);
+  for(i = 0; i < pickedQuestion.answers.length; i++){
+    console.log(pickedQuestion.answers[i]);
+  }
+  var userAnswer = prompt('Enter a number as an answer');
+
+  if(checkAnswer(userAnswer, pickedQuestion.correctAnswer) == 'Correct!'){
+    console.log('Correct');
+    score++;
+    console.log('Current score: ' + score);
+    console.log(' ');
+    return pickRandom(questionPool);
+  } else if(checkAnswer(userAnswer, pickedQuestion.correctAnswer) == 'exit'){
+    console.log('Final Score is: ' + score);
+    return;
+  } else{
+    console.log('Incorrect.');
+    console.log('Current score: ' + score);
+    console.log(' ');
+  }
+  return pickRandom(questionPool);
+}
+
+pickRandom(questionPool);
+//////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
