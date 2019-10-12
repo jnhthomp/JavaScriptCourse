@@ -493,78 +493,168 @@
 
   11. Display score in console
 */
-var score = 0;
-var Question = function(desc, answers, correctAnswer) {
-  this.desc = desc;
-  this.answers = answers;
-  this.correctAnswer = correctAnswer;
-};
 
-var question1 = new Question('This is a test, answer 0', ['answer 0', 'answer 1', 'answer 2'], 0);
-var question2 = new Question('This is a test, answer 1', ['answer 0', 'answer 1', 'answer 2'], 1);
-var question3 = new Question('This is a test, answer 2', ['answer 0', 'answer 1', 'answer 2'], 2);
-
-var questionPool = [question1, question2, question3];
-
-var checkAnswer = function(userAnswer, correctAnswer){
-  if (userAnswer == correctAnswer){
-    return 'Correct!';
-  } else{
-    return userAnswer;
-  }
-}
-
-var pickRandom = function(questionPool){
-  var questionNumber = Math.floor(Math.random() * questionPool.length);
-  var pickedQuestion = questionPool[questionNumber];
-  console.log(questionNumber + '. ' + pickedQuestion.desc);
-  for(i = 0; i < pickedQuestion.answers.length; i++){
-    console.log(pickedQuestion.answers[i]);
-  }
-  var userAnswer = prompt('Enter a number as an answer');
-
-  if(checkAnswer(userAnswer, pickedQuestion.correctAnswer) == 'Correct!'){
-    console.log('Correct');
-    score++;
-    console.log('Current score: ' + score);
-    console.log(' ');
-    return pickRandom(questionPool);
-  } else if(checkAnswer(userAnswer, pickedQuestion.correctAnswer) == 'exit'){
-    console.log('Final Score is: ' + score);
-    return;
-  } else{
-    console.log('Incorrect.');
-    console.log('Current score: ' + score);
-    console.log(' ');
-  }
-  return pickRandom(questionPool);
-}
-
-pickRandom(questionPool);
+// MY SOLUTION
+// var score = 0;
+// var Question = function(desc, answers, correctAnswer) {
+//   this.desc = desc;
+//   this.answers = answers;
+//   this.correctAnswer = correctAnswer;
+// };
+//
+// var question1 = new Question('This is a test, answer 0', ['answer 0', 'answer 1', 'answer 2'], 0);
+// var question2 = new Question('This is a test, answer 1', ['answer 0', 'answer 1', 'answer 2'], 1);
+// var question3 = new Question('This is a test, answer 2', ['answer 0', 'answer 1', 'answer 2'], 2);
+//
+// var questionPool = [question1, question2, question3];
+//
+// var checkAnswer = function(userAnswer, correctAnswer) {
+//   if (userAnswer == correctAnswer) {
+//     return 'Correct!';
+//   } else {
+//     return userAnswer;
+//   }
+// };
+//
+// var pickRandom = function(questionPool) {
+//   var questionNumber = Math.floor(Math.random() * questionPool.length);
+//   var pickedQuestion = questionPool[questionNumber];
+//   console.log(questionNumber + '. ' + pickedQuestion.desc);
+//   for (i = 0; i < pickedQuestion.answers.length; i++) {
+//     console.log(pickedQuestion.answers[i]);
+//   }
+//   var userAnswer = prompt('Enter a number as an answer');
+//
+//   if (checkAnswer(userAnswer, pickedQuestion.correctAnswer) == 'Correct!') {
+//     console.log('Correct');
+//     score++;
+//     console.log('Current score: ' + score);
+//     console.log(' ');
+//     return pickRandom(questionPool);
+//   } else if (checkAnswer(userAnswer, pickedQuestion.correctAnswer) == 'exit') {
+//     console.log('Final Score is: ' + score);
+//     return;
+//   } else {
+//     console.log('Incorrect.');
+//     console.log('Current score: ' + score);
+//     console.log(' ');
+//   }
+//   return pickRandom(questionPool);
+// };
+//
+// pickRandom(questionPool);
 //////////////////////////////////////////////////////////////////////////////
 
+// TEACHER SOLUTION (basic solution)
+// (function() {
+//
+//   function Question(question, answers, correct) {
+//     this.question = question;
+//     this.answers = answers;
+//     this.correct = correct;
+//   }
+//
+//   Question.prototype.displayQuestion = function() {
+//     console.log(this.question);
+//
+//     for (var i = 0; i < this.answers.length; i++) {
+//       console.log(i + ': ' + this.answers[i]);
+//     }
+//   };
+//
+//   Question.prototype.checkAnswer = function(ans) {
+//     if (ans === this.correct) {
+//       console.log('Correct answer!');
+//     } else {
+//       console.log('Wrong answer, try again.');
+//     }
+//   };
+//
+//   var q1 = new Question('Is JavaScript the coolest programming language in the world?', ['yes', 'no'], 0);
+//   var q2 = new Question('What is the name of this course\'s teacher?', ['John', 'Michael', 'Jonas'], 2);
+//   var q3 = new Question('What best describes coding?', ['boring', 'hard', 'fun', 'tedious'], 2);
+//
+//   var questions = [q1, q2, q3];
+//
+//   var n = Math.floor(Math.random() * questions.length);
+//
+//   questions[n].displayQuestion();
+//
+//   var answer = parseInt(prompt('Please select the correct answer.'));
+//
+//   questions[n].checkAnswer(answer);
+//
+// })();
+
+//TEACHER SOLUTION (expert solution)
+(function() {
+
+  function Question(question, answers, correct) {
+    this.question = question;
+    this.answers = answers;
+    this.correct = correct;
+  }
+
+  Question.prototype.displayQuestion = function() {
+    console.log(this.question);
+
+    for (var i = 0; i < this.answers.length; i++) {
+      console.log(i + ': ' + this.answers[i]);
+    }
+  };
+
+  Question.prototype.checkAnswer = function(ans, callback) {
+    var sc;
+    if (ans === this.correct) {
+      console.log('Correct answer!');
+      sc = callback(true);
+    } else {
+      console.log('Wrong answer, try again.');
+      sc = callback(false);
+    }
+    this.displayScore(sc);
+  };
+
+  Question.prototype.displayScore = function(score) {
+    console.log('Your current score is: ' + score);
+    console.log('---------------------------------------');
+  };
+
+  var q1 = new Question('Is JavaScript the coolest programming language in the world?', ['yes', 'no'], 0);
+  var q2 = new Question('What is the name of this course\'s teacher?', ['John', 'Michael', 'Jonas'], 2);
+  var q3 = new Question('What best describes coding?', ['boring', 'hard', 'fun', 'tedious'], 2);
+  var questions = [q1, q2, q3];
+
+  function score() {
+    var sc = 0;
+    return function(correct) {
+      if (correct) {
+        sc++;
+      }
+      return sc;
+    };
+  }
+
+  var keepScore = score();
+
+  function nextQuestion() {
 
 
+    var n = Math.floor(Math.random() * questions.length);
 
+    questions[n].displayQuestion();
 
+    var answer = prompt('Please select the correct answer.');
 
+    if (answer !== 'exit') {
+      questions[n].checkAnswer(parseInt(answer), keepScore);
+      nextQuestion();
+    }
+  }
 
+  nextQuestion();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+})();
 
 
 
