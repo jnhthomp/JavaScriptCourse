@@ -212,6 +212,11 @@ controller.init();
 //
 
 
+// TODO: Add event handler for delete buttons
+// TODO: Delete the item from the data structure
+// TODO: Delete the item from the UI
+// TODO: Recalculate the budget
+// TODO: Update UI with recalculated budget after deleting encome/expense
 
 
 
