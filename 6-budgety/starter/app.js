@@ -383,12 +383,12 @@ controller.init();
 
 
 
-//TODO: Calculate expense item percentage
-//TODO: Update UI to show expense item percentage
-//TODO: Display current month and year
-//TODO: Number formatting
-//TODO: Improve input field ux
-
+//  TODO: Add ability to add a "category" of the expense (ie groceries, bills etc). Users should be able to add their own categories, but don't have to use them when adding income/expenses (default to other).
+//  TODO: Save results so they last longer than pageload (can be local at first)
+//  TODO: Group expenses by month and have ability to view previous months (calendar picker?)
+//  TODO: Option to login and create logins
+//  TODO: Add pie graph to see expenses by category vs income
+//  TODO: Add line graph to see income/expenses over time (month)
 
 
 

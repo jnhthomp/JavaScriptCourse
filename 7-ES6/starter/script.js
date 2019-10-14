@@ -1,0 +1,291 @@
+/*jshint esversion: 6 */
+
+
+/******************************************
+ *      103. What's New in ES6/ES2015     *
+ ******************************************/
+/*ES6/ES2015
+    Well supported in all modern browsers
+    No support in older browsers
+    Can use most features in production with transpiling + polyfilling
+      (Converting to ES5)
+    Brought a ton of updates and new features
+      Variable declarations with let and const
+      Blocks and IIFEs
+      Strings
+      Arrow functions
+      Destructuring
+      Arrays
+      The Spread Operator
+      Rest and Default Parameters
+      Maps
+      Classes and Subclasses
+      Promises
+      Native modules
+*/
+
+
+/**********************************************************
+ *      104. Variable Declarations With let and const     *
+ **********************************************************/
+/* let and const
+
+
+*/
+
+//ES5 version
+// var name5 = 'Jane Smith';
+// var age5 = 23;
+// name5 = 'Jane Miller';
+// console.log(name5);
+
+
+//ES6 version
+//  Let is used for variables that will change
+//  const is for values that won't be changed
+//    Name cannot be changed here because it was declared as a constant
+//  let and const are both block scoped
+//    es5 var was function scoped
+
+// const name6 = 'Jane Smith';
+// let age6 = 23;
+// name6 = 'Jane Miller';
+// console.log(name6);
+
+
+//ES5
+// Function scoped
+// Because var is used firstName and yearOfBirth are avalable anywhere inside the function
+// function driversLicense5(passedTest) {
+//   if (passedTest) {
+//     console.log(firstName);
+//     var firstName = 'John';
+//     var yearOfBirth = 1990;
+//
+//   }
+//   console.log(firstName + ' born in ' + yearOfBirth + ' is now officially allowed to drive a car');
+// }
+// driversLicense5(true);
+//
+// //ES6
+// // Block scoped
+// //  let and const are block scoped so they are only available inside the same code block
+// //  being inside the same function isn't good enough
+// function driversLicense(passedTest) {
+//   // console.log(firstName); Trying to call a variable before assignment in ES6 will result in error instead of undefined like ES5
+//   let firstName;
+//   // Const cannot be assigned a value later
+//   const yearOfBirth = 1990;
+//   if (passedTest) {
+//     firstName = 'John';
+//
+//   }
+//   console.log(firstName + ' born in ' + yearOfBirth + ' is now officially allowed to drive a car');
+// }
+// driversLicense(true);
+//
+//
+//
+// // Because of block scope changing i in the for loop will not change the i in the global scope
+// //  They happen to have the same name but they are totally seperate variables
+// let i = 23;
+// for (let i = 0; i < 5; i++) {
+//   console.log(i);
+// }
+// console.log(i);
+
+
+
+/**********************************
+ *      105. Blocks and IIFEs     *
+//  **********************************/
+// // You can create a block with just curly braces
+// //   This will help insure data privacy
+// {
+//   const a = 1;
+//   let b = 1;
+//   var c = 3;
+// }
+// //console.log(a + b); // This is not accessible because it is outside the block
+// console.log(c); // This would work because it doesn't matter if a variable is outside of the block if they are in the same scope
+// //ES5 Block
+// (function() {
+//   var c = 3;
+// })();
+// //console.log(c);
+
+/***************************************
+ *      106. Strings in ES6/ES2015     *
+ ***************************************/
+
+// let first = 'John';
+// let last = 'Smith';
+// const yearOfBirth = 1990;
+//
+// function calcAge(year) {
+//   return 2019 - year;
+// }
+//
+// //ES 5
+// console.log('This is ' + first + ' ' + last + '. He was born in ' + yearOfBirth + '. Today, he is ' + calcAge(yearOfBirth) + ' years old.');
+//
+// //ES6
+// // Now we don't have to start and stop single quotes and include plus signs
+// // To use a variable or function start with a back tick ``
+// // Then use a ${variableOrFunction} inside
+// console.log(`This is ${first} ${last}. He was born in ${yearOfBirth}. Today he is ${calcAge(yearOfBirth)} years old.`);
+//
+// // ES6 New string methods
+// const n = `${first} ${last}`;
+// console.log(n.startsWith('J')); // Does the string startWith('') arguement (checks capitalization)
+// console.log(n.endsWith('h')); // Does the string end with arguement
+// console.log(n.includes(' ')); // is the arguement found anywhere in the string?
+// console.log(first.repeat(5)); // Repeats the string as much as arguement specifies
+// // to include a space with .repeat you must include template literal
+// console.log(`${first} `.repeat(5));
+
+
+
+/*****************************************
+ *      107. Arrow Functions: Basics     *
+ *****************************************/
+//
+// const years = [1990, 1965, 1982, 1937];
+//
+// //ES5
+// var ages5 = years.map(function(el) {
+//   return 2019 - el;
+// });
+// console.log(ages5);
+//
+// //ES6
+// // Arrow operator basically means:
+// //   perform action after the arrow and return the result
+// let ages6 = years.map(el => 2019 - el);
+// console.log(ages6);
+//
+// // If there is more than 1 arguement parenthesis are needed
+// ages6 = years.map((el, index) => `Age element ${index + 1}: ${2019 - el}.`);
+// console.log(ages6);
+//
+// // If there is more than one line we have to use curly braces and return is not implicit so it needs specified
+// ages6 = years.map((el, index) => {
+//   const now = new Date().getFullYear();
+//   const age = now - el;
+//   return `Age element ${index + 1}: ${age}.`;
+// });
+// console.log(ages6);
+
+
+
+/*********************************************************
+ *      108. Arrow Functions: Lexical 'this' Keyword     *
+ *********************************************************/
+
+//  Arrow functions share the surrounding this. keyword
+//  Arrow functions do not get their own this. keyword
+//  They use the this. keyword of the function they are written in
+//    This is called a lexical this
+
+// ES5
+// var box5 = {
+//   color: 'green',
+//   position: 1,
+//   clickMe: function() {
+//     var self = this;
+//     document.querySelector('.green').addEventListener('click', function() {
+//       var str = 'This is box number ' + self.position + ' and it is ' + self.color;
+//       alert(str);
+//     });
+//   }
+// };
+//
+// //box5.clickMe();
+//
+//
+// //ES6
+// const box6 = {
+//   color: 'green',
+//   position: 1,
+//   clickMe: function() {
+//     document.querySelector('.green').addEventListener('click', () => {
+//       var str = 'This is box number ' + this.position + ' and it is ' + this.color;
+//       alert(str);
+//     });
+//   }
+// };
+
+//box6.clickMe();
+
+//ES6
+// This will not work because using an arrow function in clickMe then has the this keyword pointing to window
+// const box66 = {
+//   color: 'green',
+//   position: 1,
+//   clickMe: () => {
+//     document.querySelector('.green').addEventListener('click', () => {
+//       var str = 'This is box number ' + this.position + ' and it is ' + this.color;
+//       alert(str);
+//     });
+//   }
+// };
+//
+// box66.clickMe();
+
+// function Person(name) {
+//   this.name = name;
+// }
+// //ES5
+// Person.prototype.myFriends5 = function(friends) {
+//   var arr = friends.map(function(el) {
+//     return this.name + ' is friends with ' + el;
+//   }.bind(this)); // pass this keyword into the function
+//   console.log(arr);
+// };
+//
+// var friends = ['bob', 'jane', 'mark'];
+//
+// new Person('John').myFriends5(friends);
+//
+// //ES6
+// Person.prototype.myFriends6 = function(friends) {
+//   let arr = friends.map((el) => `${this.name} is friends with ${el}`);
+//   console.log(arr);
+// };
+//
+//
+// var friends = ['Bob', 'Jane', 'Mark'];
+// new Person('Mike').myFriends6(friends);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function generateTitleBlock(lessonTitle) {
+//   var mRow = ' *      ' + lessonTitle + '     *';
+//   var length = mRow.length;
+//   var tRow = '/' + '*'.repeat(length - 1);
+//   var bRow = ' ' + '*'.repeat(length - 1) + '/';
+//   window.prompt('Copy text below for title!', tRow + '\n' + mRow + '\n' + bRow);
+// }
+//
+//
+// generateTitleBlock('108. Arrow Functions: Lexical \'this\' Keyword');
