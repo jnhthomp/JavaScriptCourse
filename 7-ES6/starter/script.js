@@ -368,16 +368,90 @@
 
 
 
+/*************************************
+ *      111. The Spread Operator     *
+ *************************************/
+
+// Convenient way to expand elements of an array
+// In place of arguements and function calls
+
+// function addFourAges(a, b, c, d) {
+//   return a + b + c + d;
+// }
+//
+// var sum1 = addFourAges(18, 30, 12, 21);
+// console.log(sum1);
+//
+// // If the four variables were in an array how would we pass them into the above function?
+//
+// //ES5
+// var ages = [18, 30, 12, 21];
+// var sum2 = addFourAges.apply(null, ages);
+// console.log(sum2);
+//
+// //ES6
+// const sum3 = addFourAges(...ages);
+// console.log(sum3);
+//
+//
+// const familySmith = ['John', 'Jane', 'Mark'];
+// const familyMiller = ['Mary', 'Bob', 'Ann'];
+// const bigFamily = [...familySmith, 'Lily', ...familyMiller];
+// console.log(bigFamily);
+//
+// const h = document.querySelector('h1');
+// const boxes = document.querySelectorAll('.box');
+// const all = [h, ...boxes];
+// Array.from(all).forEach(cur => cur.style.color = 'purple');
 
 
 
+/*********************************
+ *      112. Rest Parameters     *
+ *********************************/
+// Look similar to spread operators but act differently
+// Spread operator takes an array and inserts their values into a single function
+// Rest operator takes a single value and puts it into an array for a function that expects multiple values
 
+// Function gets an arbitrary number of years and checks if they are full age
+// // ES5
+// function isFullAge5() {
+//   //console.log(arguments);
+//   var argsArr = Array.prototype.slice.call(arguments);
+//
+//   argsArr.forEach(function(cur) {
+//     console.log((2016 - cur) >= 18);
+//   });
+// }
+//
+// //isFullAge5(1990, 1999, 1965, 2016, 1987);
+//
+// // ES6
+// // The function will transform the arguments into an array that can be used by the function
+// function isFullAge6(...years) {
+//   years.forEach(cur => console.log((2016 - cur) >= 18));
+// }
+// isFullAge6(1990, 1999, 1965, 2016, 1987);
 
-
-
-
-
-
+// What if you wanted to include the fullAge as one of the arguments?
+// ES5
+// function isFullAge5(limit) {
+//   //console.log(arguments);
+//   var argsArr = Array.prototype.slice.call(arguments, 1);
+//   //console.log(argsArr);
+//   argsArr.forEach(function(cur) {
+//     console.log((2016 - cur) >= limit);
+//   });
+// }
+//
+// //isFullAge5(16, 1990, 1999, 1965, 2016, 1987);
+//
+// // ES6
+// // The function will transform the arguments into an array that can be used by the function
+// function isFullAge6(limit, ...years) {
+//   years.forEach(cur => console.log((2016 - cur) >= limit));
+// }
+// isFullAge6(16, 1990, 1999, 1965, 2016, 1987);
 
 
 
@@ -398,4 +472,4 @@
 // }
 //
 //
-// generateTitleBlock('110. Arrays in ES6 / ES2015');
+// generateTitleBlock('112. Rest Parameters');
