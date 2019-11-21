@@ -1,0 +1,30 @@
+TO DO LIST
+  Add event handler
+  Get value from input fields
+  Add item to data structure
+    Decide whether it is income or expense
+  Add item to the ui
+    Decide whether it is income or expense
+  Calculate new budget value
+    Update UI
+
+
+
+Separating into modules let us organize our code, and to allow some aspects to be private and some public
+UI MODULE
+  Get input values
+  Add new item to the UI
+  Update the UI
+DATA MODULE
+  Add new item to our data structure
+  Calculate budget
+CONTROLLER MODULE
+  Add event handler
+
+TO DO LIST
+  Add event handler for delete buttons
+  Delete the item from the data structure
+  Delete the item to the UI
+  Recalculate the budget
+  Update UI
+  
