@@ -1,0 +1,45 @@
+Fake Bank TODO:
+
+	Create HTML outline
+		Steal from Chase for now?
+		can later edit and change to make a little more unique/generic/not as obvious it's a copy
+
+	Allow login using non-specific credentials
+		if username contains x then username is valid
+		if password contains x then password is valid
+		All valid logins show the same information
+		Have private function for handling logins if(loginValid == true)
+
+	Add fake transactions (google play, itunes, walmart, best buy, etc.)
+
+	Block page with clear empty div
+		Allow div to be disabled with an inconspicuous button click
+
+	Adjust/add automatic timeout
+	
+Future TODO:
+
+	Randomize Bank name (array option below. Maybe do object instead?)
+		give all instances of titles and logos a specific class
+			class = bankName
+			class = bankLogo
+		available options are stored in an array bankName[name0, name1, name2]
+		Gen random number
+			randNum = Math.random();
+			randNum = Math.floor(randNum * bankName.length);
+		displayBankName = bankName[randNum]
+		use displayBankName as content for all instances of classBankName
+		have a logo option that matches the color scheme below (potentially bank name as well?)
+			Try using a vector and inserting color options from below into CSS sheet
+	
+	Randomize color templates
+		similar as above but with multiple colors (array inside array? object?)
+
+	Create a js command template for adding a new recent transaction
+		Add option to cancel/delete/reject transaction/incoming payment for specified time period
+			15 minutes? 24 hours?
+	
+	Add "POTENTIAL SCAM DETECTED" pop-up
+		Activated by:
+			adding new transaction with JS command template from above
+			manually after they have edited HTML w/ hotkey/hidden button
