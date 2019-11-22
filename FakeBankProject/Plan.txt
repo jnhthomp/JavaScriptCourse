@@ -1,14 +1,52 @@
 Fake Bank TODO:
 
-	Create HTML outline
-		Steal from Chase for now?
-		can later edit and change to make a little more unique/generic/not as obvious it's a copy
+	CURENT TASK
+		GO THROUGH CSS AND ADD COMMENTS FOR CLARITY
+	 		ORGANIZE BY FUNCTION
+			PUT UNUSED AT THE BOTTOM IN A DIFFERENT SECTION
+		GO THROUGH HTML AND ADD COMMENTS FOR CLARITY
+
+	Edit current HTML template to match bank information
+
+	Edit bankStyle.css
+		DONE add renamed style tags
+		remove unnecessary style tags
+
+	Add section to submit login information
+		Borrow from contact section?
+
+	Header:
+			Make clicking on any of the header items make the page jump down to that section
+
+	Locations:
+		Make each location selectable
+		change the about text to be location specific
+		change employees to represent different managers at different locations
+
+	About:
+		Have information/employees change based on selected location
+		Get funny Bart Simpson names for each employee that is shown (16 total)
+		Get images for employees (16)
+
+	Contact:
+		After submitting info have chat box pop up with a predetermined script
+		Can add different branches of dialogue based on what you text it?
+
+	Footer:
+		Add realistic legal text and fake links here
 
 	Allow login using non-specific credentials
 		if username contains x then username is valid
 		if password contains x then password is valid
 		All valid logins show the same information
 		Have private function for handling logins if(loginValid == true)
+		init to set loginValid = false
+		if(loginValid == false){
+			use js to insert html that shows login page
+		} else if(loginValid == true){
+			use js to insert html that shows account page
+		}
+
 
 	Add fake transactions (google play, itunes, walmart, best buy, etc.)
 
@@ -16,8 +54,14 @@ Fake Bank TODO:
 		Allow div to be disabled with an inconspicuous button click
 
 	Adjust/add automatic timeout
-	
+
+
+
+
+
 Future TODO:
+
+	Use excessive 2fa (4fa?)
 
 	Randomize Bank name (array option below. Maybe do object instead?)
 		give all instances of titles and logos a specific class
@@ -31,15 +75,29 @@ Future TODO:
 		use displayBankName as content for all instances of classBankName
 		have a logo option that matches the color scheme below (potentially bank name as well?)
 			Try using a vector and inserting color options from below into CSS sheet
-	
+
 	Randomize color templates
 		similar as above but with multiple colors (array inside array? object?)
 
 	Create a js command template for adding a new recent transaction
 		Add option to cancel/delete/reject transaction/incoming payment for specified time period
 			15 minutes? 24 hours?
-	
+
 	Add "POTENTIAL SCAM DETECTED" pop-up
 		Activated by:
 			adding new transaction with JS command template from above
 			manually after they have edited HTML w/ hotkey/hidden button
+
+
+-----------------------------------COMPLETE-------------------------------------
+
+Create HTML outline
+	Used template from w3schools
+		Collection: https://www.w3schools.com/w3css/w3css_templates.asp
+		This template: https://www.w3schools.com/w3css/tryw3css_templates_architect.htm
+			HTML: https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_templates_architect&stacked=h
+			CSS: https://www.w3schools.com/w3css/4/w3.css
+
+Edit all HTML/CSS tags to not be w3 (too obvious on inspect element)
+	Removed w3 beginning from all classes in HTML
+	Only changed ones that were used in CSS so I can organize them together and store the extra unused options for later
