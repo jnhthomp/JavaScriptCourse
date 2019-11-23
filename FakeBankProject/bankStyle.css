@@ -287,7 +287,7 @@ a {
   padding-left: 16px
 }
 
-/*Set button otpions*/
+/*Set button options*/
 /*.btn and .button could be used to get different options*/
 .w3-btn, .button {
   border: none;
@@ -671,6 +671,7 @@ a {
   color: white
 }
 
+/*Unknown UNUSED*/
 .w3-auto {
   max-width: 1140px
 }
@@ -690,15 +691,12 @@ a {
 .w3-cell-bottom {
   vertical-align: bottom
 }
-
 .w3-hide {
   display: none !important
 }
-
 .w3-show-block, .w3-show {
   display: block !important
 }
-
 .w3-show-inline-block {
   display: inline-block !important
 }
@@ -819,7 +817,7 @@ a {
   top: 0
 }
 
-.w3-display-topright {
+.display-topright {
   position: absolute;
   right: 0;
   top: 0

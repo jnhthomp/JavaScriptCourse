@@ -26,7 +26,8 @@ Fake Bank TODO:
 	About:
 		Have information/employees change based on selected location
 		Get funny Bart Simpson names for each employee that is shown (16 total)
-		Get images for employees (16)
+		Get images for employees (16) -4 done will work for now
+		When clicking button that says contact: autofill contact info in to field
 
 	Contact:
 		After submitting info have chat box pop up with a predetermined script
