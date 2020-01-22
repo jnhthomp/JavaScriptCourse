@@ -1,16 +1,16 @@
 Fake Bank TODO:
 
-	CURENT TASK
-		GO THROUGH CSS AND ADD COMMENTS FOR CLARITY
-	 		ORGANIZE BY FUNCTION
-			PUT UNUSED AT THE BOTTOM IN A DIFFERENT SECTION
-		GO THROUGH HTML AND ADD COMMENTS FOR CLARITY
-
+	CURENT TASK:
 	Edit current HTML template to match bank information
 
 	Edit bankStyle.css
 		DONE add renamed style tags
 		remove unnecessary style tags
+
+	GO THROUGH CSS AND ADD COMMENTS FOR CLARITY
+		ORGANIZE BY FUNCTION
+		PUT UNUSED AT THE BOTTOM IN A DIFFERENT SECTION
+	GO THROUGH HTML AND ADD COMMENTS FOR CLARITY
 
 	Add section to submit login information
 		Borrow from contact section?
