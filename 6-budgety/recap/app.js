@@ -176,11 +176,24 @@ var UIController = (function() {
 
 //  GLOBAL APP CONTROLLER
 //    Allows interaction between budgetController and UIController
+//    Private variables and functions
+//     setupEventListeners: make submit button clickable. Enter also submits
+//     ctrlAddItem: Collects data from user fields
+//      Processes received data through budget controller
+//      Processes received data through UIController
+//      Clears fields for user
+//      Calculate new budget information
+//      Update UI with new budget information
+//    Public Variables and functions
+//      init: activate event listeners to receive user input
 var controller = (function(budgetCtrl, UICtrl) {
   // Makes button clickable and submit w/ "enter"
   var setupEventListeners = function() {
+    //  Access DOMstrings to set event listeners on
     var DOM = UICtrl.getDOMstrings();
+    //  Set event listener on button runs ctrlAddItem below
     document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
+    //  Listen for "Enter" key. When pressed run ctrlAddItem below
     document.addEventListener('keypress', function(event) {
       if (event.keyCode === 13 || event.which === 13) {
         ctrlAddItem();
@@ -188,6 +201,7 @@ var controller = (function(budgetCtrl, UICtrl) {
     });
   };
 
+  // Collects data from fields. Processes with BudgetController/UIController
   var ctrlAddItem = function() {
     var input;
     var newItem;
@@ -209,12 +223,15 @@ var controller = (function(budgetCtrl, UICtrl) {
   };
 
   return {
+    // Initialize the page (runs at load)
     init: function() {
       console.log('Application has started.');
+      //  Start event listeners so things can happen
       setupEventListeners();
     }
   };
 
 })(budgetController, UIController);
 
+// Run initialization
 controller.init();
