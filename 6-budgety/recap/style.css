@@ -278,3 +278,10 @@ h2 {
 
 .unpaid .item__percentage { box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1); }
 .unpaid:hover .item__description { font-weight: 900; }
+
+option.inc__sign{
+  color: #28B9B5;
+}
+option.exp__sign{
+  color: #FF5049
+}
