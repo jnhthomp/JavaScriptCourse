@@ -1,0 +1,34 @@
+This document is to outline all steps and describe all functions of the application. There should be blank main sections.
+  Page Load
+  Exp/Inc submitted
+  Item removed
+
+Order
+Page Load:
+  controller.init(); sets all initial values
+    Display application has started in console
+
+    Runs UIController.displayMonth();
+
+    Runs UI Ctrl.displayBudget();
+
+    Runs setupEventListeners(); for buttons
+
+Add exp/inc button clicked:
+  Runs ctrlAddItem();
+    Runs UICtrl.getInput();
+      returns object w/ type, description, and values from user as var input
+      Checks that object received from UICtrl.getInput(); is valid (no false)
+      (Description must not be blank and value must be number)
+      Runs budgetCtrl.addItem(); w/ values from UICtrl.getInput();
+        Adds an item to the budget controller
+        Creates a new ID by type (inc/exp)
+          If appropriate array is empty ID = 0;
+          If array is populated then ID = lastItemInArray.id + 1
+          Create a new object based on type (Expense object or Income object)
+          Includes values from UICtrl.getInput(); and ID that was just generated
+          Adds item to the end of appropriate array data.allItems[inc/exp]
+          Returns the item to controller as variable newItem
+      Runs UIController.addListItem(newItem, input.type);
+        Adds new exp or income to UI
+          Creates html strings w/
