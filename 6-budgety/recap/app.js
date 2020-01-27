@@ -134,7 +134,7 @@ var budgetController = (function() {
 
 
   /**********************************
-   *      PUBLICALLY ACCESSABLE     *
+   *      PUBLICLY ACCESSIBLE     *
    **********************************/
   return {
 
@@ -266,6 +266,9 @@ var budgetController = (function() {
 
 
 
+/************************
+ *      UI controller   *
+ ************************/
 //  UI CONTROLLER
 //    Controlls UI changes and receives input
 //    Private variables and functions
@@ -277,166 +280,276 @@ var budgetController = (function() {
 //      clearFields: Clears user entry and resets cursor to description
 //      getDOMstrings: Allows DOMstrings to be used by global controller
 var UIController = (function() {
-
-  //Store class names here so they can be used later and easily changed
+  /************************
+   *      DOM STRINGS     *
+   ************************/
+  // Store class names here so they can be used later and easily changed
+  // If redesigned with different class names they only need changed once
   var DOMstrings = {
-    inputType: '.add__type',
-    inputDescription: '.add__description',
-    inputValue: '.add__value',
-    inputBtn: '.add__btn',
-    incomeContainer: '.income__list',
-    expensesContainer: '.expenses__list',
-    budgetLabel: '.budget__value',
-    incomeLabel: '.budget__income--value',
-    expensesLabel: '.budget__expenses--value',
+    // User input boxes
+    inputType: '.add__type', // Dropdown - Whether user enter inc or exp (+/-)
+    inputDescription: '.add__description', // Description of inc/exp
+    inputValue: '.add__value', // Value of inc/exp
+    inputBtn: '.add__btn', // Submit user input
+
+    // Display individual inc/exp items
+    container: '.container', // Both inc and exp UI lists are stored here
+    incomeContainer: '.income__list', // UI list of all incomes
+    expensesContainer: '.expenses__list', // UI list of all expenses
+
+    // Display calculated total budget information
+    budgetLabel: '.budget__value', // Displays  total income - total expenses
+    incomeLabel: '.budget__income--value', // Shows total value of income
+    expensesLabel: '.budget__expenses--value', // Shows total value of expenses
+    // Percentage the total expenses make up of total income
     percentageLabel: '.budget__expenses--percentage',
-    container: '.container',
+
+    // Show individual expense percentages
     expensesPercLabel: '.item__percentage',
+
+    // Display date on page
     dateLabel: '.budget__title--month'
   };
 
+  /**************************
+   *      Format Number     *
+   **************************/
+  // Format value numbers for Incomes and Expenses (total + individual)
+  // Passed a number to format and the type (+/-)
+  // + or - before number 1000 -> + 100
+  // exactly 2 decimal points 1000 -> 1000.00
+  // comma seperating thousands 1000 -> 1,000
+  // 1000 -> + 1,000.00
   var formatNumber = function(num, type) {
     var numSplit, int, dec;
-    // + or - before number + 100 / -100
-    // exactly 2 decimal points 100.00
-    // comma seperating thousands 1,000
-    // 1000 -> + 1,000.00
 
+    // Ensures number is positive
     num = Math.abs(num);
+    // Adds/Removes to set number to 2 decimal places
     num = num.toFixed(2);
-
+    // Creates array[numbers before decimal, numbers after decimal]
     numSplit = num.split('.');
+
+    // Assigns number before decimal to int variable
     int = numSplit[0];
-
-
-    if (int.length > 3) {
+    // To add commas for thousands
+    if (int.length > 3) { // Applies to all numbers w/ 4+ numbers before decimal
+      // Returns portion of string from begging of string to 3 from the end
+      // Adds comma
+      // Selects portion of string from 3 from the end to the end
+      // Overwrites previously assigned int w/ int string that includes commas
       int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, 3);
     }
+    // Assigns number after decimal to dec variable
     dec = numSplit[1];
-
+    // If the passed type is exp use (-) sign
+    // If the passed type is inc use (+) sign
+    // Return sign, space, int(w/ commas), period, and decimal number as string
     return (type === 'exp' ? sign = '-' : sign = '+') + ' ' + int + '.' + dec;
   };
 
+  // Reusable function to loop through a list and perform function on each item
   var nodeListsForEach = function(list, callback) {
+    // Loop through list, perform passed function on each item
     for (var i = 0; i < list.length; i++) {
+      //function being performed on each item
       callback(list[i], i);
     }
   };
 
-  // Receive input; Use object so you can receive +/-, name, and value
+
+
+  /******************************
+   *      PUBLICLY ACCESSIBLE   *
+   ******************************/
   return {
+
+    /**********************
+     *      Get Input     *
+     **********************/
+    // Receive input; Use object so you can receive +/-, name, and value
     getinput: function() {
       return {
-        type: document.querySelector(DOMstrings.inputType).value, //will be inc/exp
+        // Returns type selected by user (inc or exp)
+        type: document.querySelector(DOMstrings.inputType).value,
+        // Returns description entered by user
         description: document.querySelector(DOMstrings.inputDescription).value,
+        // Returns dollar amount entered by user
         value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
       };
     },
 
+    /**************************
+     *      Add List Item     *
+     **************************/
+     // Adds user entered expense or income item to the UI
     addListItem: function(obj, type) {
       var html, newHtml, element;
-      //  1. Create html strings w/ placeholder text
-      if (type === 'inc') {
-        // Adds html block to income list
+      //  1. Create html strings w/ placeholder text (selecting inc or exp)
+      if (type === 'inc') { // This is for Income items
+        // Selects which container to add UI item to
         element = DOMstrings.incomeContainer;
-        // Placeholder html
+        // Placeholder html  will be formatted in step 2
         html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
-      } else if (type === 'exp') {
-        // Adds html block to expenses list
+      } else if (type === 'exp') { // This is for Expense items
+        // Selects which container to add UI item to
         element = DOMstrings.expensesContainer;
-        // Placeholder html
+        // Placeholder html will be formatted in step 2
         html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
       }
+
       //  2. Replace placeholder text with data
+      //    Replace %id%  html/css id with the id# generated for object
       newHtml = html.replace('%id%', obj.id);
+      //    Replace placeholder description with submitted description
       newHtml = newHtml.replace('%description%', obj.description);
+      //    Replace placeholder value with submitted value
       newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
+
       //  3. Insert HTML into DOM
+      //    Adds to element selected earlier
+      //    Inserts generated HTML as last item in element container
       document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
     },
 
-    deleteListItem: function(selectorID) {
+    /******************************
+     *      Delete List Item      *
+     ******************************/
+     // Deletes an item from the UI
+     // Gets passed full class name ex: income-0
+    deleteListItem: function(selectorID) { // Passes ID# to delete
+      // Finds list item with specified id
       var el = document.getElementById(selectorID);
+      // Removes list item with specified ID
+      // Moves up one level and delets a child. Cannot directly delete an item
       el.parentNode.removeChild(el);
     },
 
+    /**************************
+     *      Clear Fields      *
+     **************************/
     // Clear user input from fields
     clearFields: function() {
       var fields, fieldsArr;
-      // Creates a list of fields that need cleared
+      // Creates a list of fields that need cleared (2items)
+      // contains 2 items seperated by comma: input description and input value
       fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
 
       // Transforms list of fields into an array of fields
+      // Tricks JS into thinking it is working with array and generates array
       fieldsArr = Array.prototype.slice.call(fields);
 
       // Goes through array of fields and sets each one to blank
+      //  Loops and for each item in the array sets it to a blank value
       fieldsArr.forEach(function(current, index, array) {
         current.value = '';
 
       });
-
       // Return cursor to first item in fields array (inputDescription)
       fieldsArr[0].focus();
     },
 
+    /****************************
+     *      Display Budget      *
+     ****************************/
     displayBudget: function(obj) {
-
+      //If data.budget > 0 then type will be inc if 0 or less type is exp
       obj.budget > 0 ? type = 'inc' : type = 'exp';
+      // Select total budget display item in UI
+      // Format data.budget value and assign value to budget label
       document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+      // Select total income display item in UI
+      // Format data.totals.inc value and assign value to total income label
       document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
+      // Select total expenses display item in UI
+      // Format data.totals.exp value and assign value to total expense label
       document.querySelector(DOMstrings.expensesLabel).textContent = formatNumber(obj.totalExp, 'exp');
 
+      // Only shows percentage if it is greater than 0
+      // Prevents showing erros in UI when income hasn't been added yet
       if (obj.percentage > 0) {
         document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage + '%';
-      } else {
+      } else { // if totals.inc is 0 then dashes are displayed instead of error
         document.querySelector(DOMstrings.percentageLabel).textContent = '--';
       }
     },
 
+    /********************************
+     *      Display Percentages     *
+     ********************************/
+
     displayPercentages: function(percentages) {
+      // Makes a list of all expense percentage labels in UI
       var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
 
+      // Run a loop on fields list
+      // Performs callback function on each item in the list
+      //  Callback receives the current list item and items index in the list
       nodeListsForEach(fields, function(current, index) {
+        // Uses array of all percentages in budgetController.data
+        // If the value at the current index is > add a % sign
         if (percentages[index] > 0) {
           current.textContent = percentages[index] + '%';
         } else {
+          // If the current value is 0 or -1 display -- on label
           current.textContent = '--';
         }
       });
     },
 
+    /**************************
+     *      Display Month     *
+     **************************/
+     // Displays current month and year in UI
     displayMonth: function() {
       var now, year, month, months;
+      // Built into js receives current date and assigns now variable
       now = new Date();
 
+      // List of all months
       months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-      month = now.getMonth();
-      year = now.getFullYear();
-      document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
 
+      // Get the month of the current date assign to month
+      // Will be a number 1 less than normal ex (January != 1) (January = 0)
+      month = now.getMonth();
+      // Get the year of the current date assign to year
+      year = now.getFullYear();
+
+      // Create string with the month array, space, and year
+      // Fill dateLabel in UI with string
+      document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
     },
 
+    /**************************
+     *      Changed Type      *
+     **************************/
+     // Change colors on input boxes depending if inc or exp is selected (+/-)
+     // the !important in .red-focus and .red css will overwrite normal settings
+     // Page loads with + shown and default Inc color scheme
+     // On change it will toggle and be given lower priority than new class
     changedType: function() {
+      // Create a list of user input fields (type, description, value)
       var fields = document.querySelectorAll(
         DOMstrings.inputType + ',' +
         DOMstrings.inputDescription + ',' +
         DOMstrings.inputValue);
 
+      // Loop throug fields list
       nodeListsForEach(fields, function(cur) {
+         // toggle .red-focus CSS class for each item in list
         cur.classList.toggle('red-focus');
       });
 
+      // Toggle .red CSS class for submit button
       document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
 
     },
 
-    // Make DOMstrings accessible to global controller
+    // Allow DOMStrings to be public
     getDOMstrings: function() {
       return DOMstrings;
     }
-
   };
-
 })();
 
 
@@ -569,3 +682,28 @@ controller.init();
 // TODO: Include percentage of for individual incomes budgetController.Incomes
 
 // TODO: (budgetController.calculateBudget(); budgetController.calculatePercentages(); Expense.prototype.calcPercentage) Create a percentageCalculator(exp, inc); since we write out the math multiple times
+
+// TODO: (UIController.formatNumber();) Give error message if user enters number to more than 2 decimal places
+
+// TODO: (UIController.formatNumber();) Don't allow user to enter multiple decimals
+
+// TODO: (UIController.formatNumber();) Update to use String.prototype.substring(); instead of String.prototype.subst();
+
+//TODO: (UIController.formatNumber();) Update so this works to multiple places instead of just to thousands
+  // while length before comma > 3 add a comma appropriately, loop
+
+// TODO: (BudgetController.nodeListsForEach(); UIController.nodeListsForEach(); UIController.displayPercentages) See if having both of these are necessary and reduce to just one if possible
+
+// TODO: Allow user to submit list to a function in console to automatically process all items in the list as if they had hit submit button ex: listMode(list); list = test1, value, test2, value, test3, value
+
+/*****************************************************************************/
+/******************************
+ *      COMPLETED TODO'S      *
+ ******************************/
+
+ /*
+Add css so type colors are different in drop down
+Add css so user entered text changes colors to match type
+
+
+ */
