@@ -15,7 +15,7 @@ Page Load:
     Runs setupEventListeners(); for buttons
 
 Add exp/inc button clicked:
-  Runs ctrlAddItem();
+  Runs controller.ctrlAddItem();
     Runs UICtrl.getInput();
       returns object w/ type, description, and values from user as var input
       Checks that object received from UICtrl.getInput(); is valid (no false)
@@ -30,5 +30,49 @@ Add exp/inc button clicked:
           Adds item to the end of appropriate array data.allItems[inc/exp]
           Returns the item to controller as variable newItem
       Runs UIController.addListItem(newItem, input.type);
-        Adds new exp or income to UI
-          Creates html strings w/
+        Adds new user entered expense or income to UI
+          Creates html strings w/ placeholder text different for exp and inc
+          replace placeholder id with id from newItem.description (obj)
+          replace placeholder description with newItem.description (obj)
+          replace placeholder value with newItem.value (obj)
+          Select whether generated html goes in Income or Expense list
+            Append to end of appropriate list as last item
+      Runs UIController.clearFields();
+        Clears user input fields
+        Creates a list of fields that need to be cleared w/ class names(2 items)
+        Transforms list of fields to an array
+        Go through array and set value of each item to blank ('')
+        Returns the cursor to first item in array (description)
+      Runs updateBudget();
+        Calculates and updates budget in budgetController and UI
+        Runs budgetController.calculateBudget();
+          Refreshes and updates budget calculations
+          Calculate total income and expenses
+            Runs calculateTotal('exp')
+              set initial sum to 0
+              loop through data.AllItems[exp]
+              Increment sum by the value of each item in the array
+            Runs calculateTotal('inc')
+              set initial sum to 0
+              loop through data.AllItems[inc]
+              Increment sum by the value of each item in the array
+            Sets budgetController.data.budget to sum(inc) - sum(exp) (above)
+            Makes sure there are income values
+              If there are calculate percentage total exp is of total inc
+              If there are not percentage = -1 (Will show as dashes on UI if -1)
+        Runs budgetController.getBudget() sets result as var budget
+          Returns budget object containing
+            budget: budgetController.data.budget
+            totalInc: budgetController.data.totals.inc
+            totalExp: budgetController.data.totals.exp
+            percentage: budgetController.data.percentage
+        Runs UIController.displayBudget(obj)(budget just retrieved)
+          Updates the budget on the UI
+            Finds obj.budget
+              if it is > 0
+                var type is set to inc
+              if it is <= 0
+                var type is set to exp
+            Selects total budget display item in UI
+            format data.budget value
+            assign the formatted value to

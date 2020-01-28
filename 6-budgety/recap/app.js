@@ -715,12 +715,15 @@ controller.init();
 
 // TODO: Allow user to submit list to a function in console to automatically process all items in the list as if they had hit submit button ex: listMode(list); list = test1, value, test2, value, test3, value
 
+// TODO: Add light mode/dark mode toggle switch
+
 /*****************************************************************************/
 /******************************
  *      COMPLETED TODO'S      *
  ******************************/
 
 /*
+Changed to dark mode
 Add css so type colors are different in drop down
 Add css so user entered text changes colors to match type
 

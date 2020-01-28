@@ -1,0 +1,25 @@
+GOAL:
+Create a webpage that allows a user to see a list of words. The object is type each word as quickly as possible for 1 minute. When the minute is the words per minute (wpm) typed are displayed
+
+Outline:
+  UI
+    Must show list of words
+      Create HTML word box
+        approximately 40 characters across
+        2 rows
+      Highlight current word
+      When end of row reach scroll down so the second row is on top
+      Insert new row below to maintain 2 rows
+    Have user input box to type in
+    After completing a word (space is pressed) clear text box
+    Display calculated WPM
+    Have reset button
+
+  CalculateWPM
+    [(All typed entries / 5) - Uncorrected Errors] / Time(min)
+
+
+
+
+Future features:
+Adjust amount of time allowed for test
