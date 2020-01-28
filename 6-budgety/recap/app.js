@@ -1,4 +1,6 @@
-//  BUDGET CONTROLLER
+/******************************
+ *      BUDGET CONTROLLER     *
+ ******************************/
 //    Performs budget calculations
 //    Private variables and functions
 //      Expense: Creates Expense objects
@@ -16,9 +18,6 @@
 //        Return new object to global controller
 //    Testing variables and functions
 //      testing: ensure data object is storing objects and totals correctly
-/******************************
- *      BUDGET CONTROLLER     *
- ******************************/
 var budgetController = (function() {
 
   /****************************
@@ -382,7 +381,7 @@ var UIController = (function() {
     /**************************
      *      Add List Item     *
      **************************/
-     // Adds user entered expense or income item to the UI
+    // Adds user entered expense or income item to the UI
     addListItem: function(obj, type) {
       var html, newHtml, element;
       //  1. Create html strings w/ placeholder text (selecting inc or exp)
@@ -415,8 +414,8 @@ var UIController = (function() {
     /******************************
      *      Delete List Item      *
      ******************************/
-     // Deletes an item from the UI
-     // Gets passed full class name ex: income-0
+    // Deletes an item from the UI
+    // Gets passed full class name ex: income-0
     deleteListItem: function(selectorID) { // Passes ID# to delete
       // Finds list item with specified id
       var el = document.getElementById(selectorID);
@@ -500,7 +499,7 @@ var UIController = (function() {
     /**************************
      *      Display Month     *
      **************************/
-     // Displays current month and year in UI
+    // Displays current month and year in UI
     displayMonth: function() {
       var now, year, month, months;
       // Built into js receives current date and assigns now variable
@@ -523,10 +522,10 @@ var UIController = (function() {
     /**************************
      *      Changed Type      *
      **************************/
-     // Change colors on input boxes depending if inc or exp is selected (+/-)
-     // the !important in .red-focus and .red css will overwrite normal settings
-     // Page loads with + shown and default Inc color scheme
-     // On change it will toggle and be given lower priority than new class
+    // Change colors on input boxes depending if inc or exp is selected (+/-)
+    // the !important in .red-focus and .red css will overwrite normal settings
+    // Page loads with + shown and default Inc color scheme
+    // On change it will toggle and be given lower priority than new class
     changedType: function() {
       // Create a list of user input fields (type, description, value)
       var fields = document.querySelectorAll(
@@ -536,7 +535,7 @@ var UIController = (function() {
 
       // Loop throug fields list
       nodeListsForEach(fields, function(cur) {
-         // toggle .red-focus CSS class for each item in list
+        // toggle .red-focus CSS class for each item in list
         cur.classList.toggle('red-focus');
       });
 
@@ -553,7 +552,10 @@ var UIController = (function() {
 })();
 
 
-//  GLOBAL APP CONTROLLER
+
+/**********************************
+ *      GLOBAL APP CONTROLLER     *
+ **********************************/
 //    Allows interaction between budgetController and UIController
 //    Private variables and functions
 //     setupEventListeners: make submit button clickable. Enter also submits
@@ -569,6 +571,7 @@ var controller = (function(budgetCtrl, UICtrl) {
   var setupEventListeners = function() {
     //  Access DOMstrings to set event listeners on
     var DOM = UICtrl.getDOMstrings();
+
     //  Set event listener on button runs ctrlAddItem below
     document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
     //  Listen for "Enter" key. When pressed run ctrlAddItem below
@@ -578,13 +581,17 @@ var controller = (function(budgetCtrl, UICtrl) {
       }
     });
 
+    // Set event listener on Income/Expenses list delete buttons
     document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
 
+    // Set event listener on type selector
+    // Will change colors of user input boxes
     document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
-
   };
 
+  // Processes budget information and changes UI
   var updateBudget = function() {
+
     //1. Calculate the budget
     budgetCtrl.calculateBudget();
 
@@ -595,6 +602,7 @@ var controller = (function(budgetCtrl, UICtrl) {
     UICtrl.displayBudget(budget);
   };
 
+  // Processes percentage changes. Updates changes to budgetController and UI
   var updatePercentages = function() {
     // 1. Calculate Percentages
     budgetCtrl.calculatePercentages();
@@ -608,35 +616,40 @@ var controller = (function(budgetCtrl, UICtrl) {
   var ctrlAddItem = function() {
     var input;
     var newItem;
+
     //1. Get the field input data
     input = UICtrl.getinput();
 
+    // Make sure that description and value are not empty or invalid
     if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
       //2. Add item to the budget controller
       newItem = budgetCtrl.addItem(input.type, input.description, input.value);
-
       //3. Add the item to the UI
       UIController.addListItem(newItem, input.type);
-
       //4. Clear the fields
       UICtrl.clearFields();
-
       //5. Calculate and update budget
       updateBudget();
-
       //6. Calculate and update percentages
       updatePercentages();
     }
   };
 
+  // Delete an item from budgetController and UIController
   var ctrlDeleteItem = function(event) {
     var itemID, splitID, type, ID;
 
+    // Find ID of delete button that was clicked
     itemID = (event.target.parentNode.parentNode.parentNode.parentNode.id);
 
+    // When it receives an ID process so it can be identified
     if (itemID) {
+      // Makes an array of strings before and after specified character (-)
       splitID = itemID.split('-');
+      // The first item in array made above ex: [income, 0] (income)
       type = splitID[0];
+      // The second item in array made above ex: [income, 0] (0)
+      // Converts result to an int instead of string
       ID = parseInt(splitID[1]);
 
       // 1. Delete the item from the data structure
@@ -677,6 +690,12 @@ var controller = (function(budgetCtrl, UICtrl) {
 // Run initialization
 controller.init();
 
+
+
+/******************************************************************************/
+/****************************************
+ *      TODO List and Improvements      *
+ ****************************************/
 // TODO: (controller.ctrlAddItem();) Set a message if blank or invalid values are submitted by user
 
 // TODO: Include percentage of for individual incomes budgetController.Incomes
@@ -690,7 +709,7 @@ controller.init();
 // TODO: (UIController.formatNumber();) Update to use String.prototype.substring(); instead of String.prototype.subst();
 
 //TODO: (UIController.formatNumber();) Update so this works to multiple places instead of just to thousands
-  // while length before comma > 3 add a comma appropriately, loop
+// while length before comma > 3 add a comma appropriately, loop
 
 // TODO: (BudgetController.nodeListsForEach(); UIController.nodeListsForEach(); UIController.displayPercentages) See if having both of these are necessary and reduce to just one if possible
 
@@ -701,7 +720,7 @@ controller.init();
  *      COMPLETED TODO'S      *
  ******************************/
 
- /*
+/*
 Add css so type colors are different in drop down
 Add css so user entered text changes colors to match type
 
