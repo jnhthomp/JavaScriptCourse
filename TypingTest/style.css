@@ -23,10 +23,18 @@ h1{
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 20px;
+  display: table;
 }
 
-.typing__box{
+.testing__area{
+  text-align: center;
+}
+
+#typing__box{
   width: 40%;
   height: 25px;
-  align: middle;
+
+}
+#word__box__1{
+  display: table-row;
 }

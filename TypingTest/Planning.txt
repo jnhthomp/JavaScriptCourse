@@ -14,6 +14,7 @@ Outline:
     After completing a word (space is pressed) clear text box
     Display calculated WPM
     Have reset button
+    Show countdown timer
 
   CalculateWPM
     [(All typed entries / 5) - Uncorrected Errors] / Time(min)
