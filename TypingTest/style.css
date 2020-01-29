@@ -12,13 +12,44 @@ h1{
   text-align: center;
 }
 
+button{
+  padding: none;
+}
+.btn__restart{
+  font-size: 2em;
+  background-color: white;
+  margin: 0px;
+  width: 150%;
+  height: 100%;
+  padding: none;
+
+}
+
+.ion-md-refresh{
+  padding: none;
+}
+.main__content{
+  display: block;
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.submit__btn{
+  float: right;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: none !important;
+}
+
 .word__boxes{
   background-color: #fffdd0;
   font-size: 1.75em;
   margin-left: auto;
   margin-right: auto;
   height: 110px;
-  width: 40%;
+  width: 100%;
   text-align: left;
   padding-left: 15px;
   padding-right: 15px;
@@ -26,13 +57,19 @@ h1{
   display: table;
 }
 
+.btn__div{
+  float: right;
+}
+
 .testing__area{
-  text-align: center;
+display: inline;
 }
 
 #typing__box{
-  width: 40%;
+  width: 90%;
   height: 25px;
+  float:left;
+
 
 }
 #word__box__1{
