@@ -13,15 +13,16 @@ h1{
 }
 
 button{
-  padding: none;
+
 }
 .btn__restart{
   font-size: 2em;
-  background-color: white;
+  background-color: #292929 !important;
+  color:#03dac6;
   margin: 0px;
   width: 150%;
   height: 100%;
-  padding: none;
+
 
 }
 
@@ -30,17 +31,19 @@ button{
 }
 .main__content{
   display: block;
+  height:30%;
   width: 40%;
   margin-left: auto;
   margin-right: auto;
 }
 
 .submit__btn{
+  font-size: 1em;
   float: right;
   width: 100%;
   background: none;
   border: none;
-  padding: none !important;
+  padding: 0 !important;
 }
 
 .word__boxes{
@@ -48,25 +51,37 @@ button{
   font-size: 1.75em;
   margin-left: auto;
   margin-right: auto;
-  height: 110px;
-  width: 100%;
+  height: 80%;
+  width: 96%;
   text-align: left;
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 20px;
+  padding-bottom: 10px;
   display: table;
 }
 
 .btn__div{
   float: right;
+  display: inline;
+  width: 3%;
 }
 
 .testing__area{
 display: inline;
 }
 
+.timer{
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  color: #03dac6;
+  font-size: 1.25em;
+}
+
 #typing__box{
-  width: 90%;
+  width: 95%;
   height: 25px;
   float:left;
 
