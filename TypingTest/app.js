@@ -1,3 +1,6 @@
+/******************************
+ *      Budget Controller     *
+ ******************************/
 // Controller to handle calculations and stores background data
 // Store list of words to be used
 // Randomizes the order of the words
@@ -10,6 +13,7 @@ var TypeTestData = (function() {
   ];
 
   var randomizeWordList = function(wordList) {
+    // Uses fisher/yates method https://bost.ocks.org/mike/shuffle/
     var currentIndex = wordList.length,
       temporaryValue, randomIndex;
 
@@ -25,10 +29,19 @@ var TypeTestData = (function() {
     return wordList;
   };
 
+  var scoreTest = function(allTypedEntries, uncorrectedErrors, time) {
+    wpm = ((allTypedEntries / 5) - uncorrectedErrors) / time;
+  };
+
   return {
     createWordList: function() {
       return randomizeWordList(wordList);
     },
+
+    calcWPM: function(allTypedEntries, uncorrectedErrors, time) {
+      return scoreTest();
+    },
+
     testing: {
       randomizeWordList: function() {
         console.log(randomizeWordList(wordList));
@@ -37,17 +50,26 @@ var TypeTestData = (function() {
   };
 })();
 
+
+
+/**************************
+ *      UI Controller     *
+ **************************/
 // Makes changes and updates to the UI
 var UIController = (function() {
   // store domElements to use elsewhere
   var domStrings = {
     // Where words to type are displayed
-    wordList: '#word__box__1'
+    wordList: '#word__box__1',
+    // Reset button
+    resetButton: 'reset__button'
   };
 
   var formatWordList = function(wordList) {
     wordList = wordList.toString(wordList);
-    wordList = wordList.replace(',', ' ');
+    while (wordList.includes(',', 0)) {
+      wordList = wordList.replace(',', ' ');
+    }
     return wordList;
   };
 
@@ -59,7 +81,8 @@ var UIController = (function() {
       document.querySelector(domStrings.wordList).textContent = wordList;
     },
     // returns list of domstrings
-    getdomStrings: function() {
+    getDomStrings: function() {
+      console.log('domStrings are:' + domStrings);
       return domStrings;
     }
   };
@@ -70,6 +93,11 @@ var Controller = (function() {
 })();
 
 
+
+
+/****************************
+ *      Main Controller     *
+ ****************************/
 // Handles interactions between TypeTestData and UIController
 var mainController = (function(TypeTestData, UIController) {
   // Creates a new wordList in TypeTestData
@@ -84,9 +112,26 @@ var mainController = (function(TypeTestData, UIController) {
 
 
   };
+
+  // Setup buttons to be clicked
+  var setupEventListeners = function() {
+    // store domStrings so we can use them
+    var domStrings = UIController.getDomStrings();
+    console.log(domStrings);
+    // Access domStrings to set event listeners on
+    document.getElementById(domStrings.resetButton).addEventListener("click", function() {
+      mainController.init();
+    });
+
+
+
+
+  };
+
   return {
     init: function() {
       setTestWords();
+      setupEventListeners();
     }
   };
 })(TypeTestData, UIController);
