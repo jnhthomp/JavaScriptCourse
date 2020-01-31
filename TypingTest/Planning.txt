@@ -29,6 +29,10 @@ Adjust amount of time allowed for test
 
 scratch
 
+In typing area:
+When any key is pressed{
+start countdown timer
+}
 This happens when spacebar is pressed
 if(whatUserEnters == firstWord){// firstWord = word before space
  count number of letters of that word
