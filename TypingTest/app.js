@@ -29,6 +29,8 @@ var TypeTestData = (function() {
     return wordList;
   };
 
+
+
   var scoreTest = function(allTypedEntries, uncorrectedErrors, time) {
     wpm = ((allTypedEntries / 5) - uncorrectedErrors) / time;
   };
@@ -60,9 +62,13 @@ var UIController = (function() {
   // store domElements to use elsewhere
   var domStrings = {
     // Where words to type are displayed
-    wordList: '#word__box__1',
+    wordList: 'word__box__1',
+    // Where user types for test (ID)
+    typingArea: 'typing__box',
     // Reset button
-    resetButton: 'reset__button'
+    resetButton: 'reset__button',
+    // timer
+    timer: 'timer'
   };
 
   var formatWordList = function(wordList) {
@@ -73,17 +79,53 @@ var UIController = (function() {
     return wordList;
   };
 
+  var startTime = 10;
+  var seconds = startTime;
+  var timer;
+
+  function countdownTimer() {
+    if (seconds <= startTime) {
+      document.getElementById(domStrings.timer).innerHTML = seconds;
+    }
+    if (seconds > 0) {
+      seconds--;
+    } else {
+      clearInterval(timer);
+      alert('You type x WPM');
+    }
+  }
+
+
+
   return {
     updateWordList: function(wordList) {
       console.log(wordList);
+      // since wordList is current a list with commas and no spaces we have to format to replace the commas with spaces
       wordList = formatWordList(wordList);
       console.log(wordList);
-      document.querySelector(domStrings.wordList).textContent = wordList;
+      document.getElementById(domStrings.wordList).textContent = wordList;
     },
     // returns list of domstrings
     getDomStrings: function() {
-      console.log('domStrings are:' + domStrings);
+      console.log('domStrings are: ' + domStrings.wordList + ' and ' + domStrings.resetButton);
       return domStrings;
+    },
+
+    timerStart: function() {
+      countdownTimer();
+    },
+
+    timerStart2: function() {
+      if (!timer) {
+        timer = window.setInterval(function() {
+          UIController.timerStart();
+        }, 1000);
+      }
+    },
+
+    resetTimer: function() {
+      console.log('set seconds to 10');
+      seconds = 10;
     }
   };
 })();
@@ -105,9 +147,9 @@ var mainController = (function(TypeTestData, UIController) {
   var setTestWords = function() {
     // Generate the randomized word list
     wordList = TypeTestData.createWordList();
-    console.log('mainController.setTestWords()' + wordList);
+    // console.log('mainController.setTestWords()' + wordList);
 
-    // Send list to UI controller
+    // Update wordlist in UI
     UIController.updateWordList(wordList);
 
 
@@ -117,21 +159,28 @@ var mainController = (function(TypeTestData, UIController) {
   var setupEventListeners = function() {
     // store domStrings so we can use them
     var domStrings = UIController.getDomStrings();
-    console.log(domStrings);
+    // console.log(domStrings);
     // Access domStrings to set event listeners on
     document.getElementById(domStrings.resetButton).addEventListener("click", function() {
       mainController.init();
     });
 
 
+    document.getElementById(domStrings.typingArea).onkeydown = function() {
+      UIController.timerStart2();
+    };
+  };
 
-
+  var resetTimer = function() {
+    UIController.resetTimer();
   };
 
   return {
     init: function() {
       setTestWords();
+      //UIController.timerStart();
       setupEventListeners();
+      resetTimer();
     }
   };
 })(TypeTestData, UIController);

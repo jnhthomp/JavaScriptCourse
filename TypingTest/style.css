@@ -71,7 +71,7 @@ button{
 display: inline;
 }
 
-.timer{
+.timer__display{
   width: 30%;
   margin-left: auto;
   margin-right: auto;
