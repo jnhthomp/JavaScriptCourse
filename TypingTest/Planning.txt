@@ -47,3 +47,50 @@ if(whatUserEnters == firstWord){// firstWord = word before space
   remove firstWord from wordList
   clear user input field
 }
+
+
+When space is pressed we want to
+Look at what user typed
+Look at what they were supposed to type
+For each letter in the testWord string
+  compare to the letter in the same place in the typedWord sting
+Clear userInput from field
+Delete the first word from wordList
+Add the length of testWord to a running total
+  If 2 characters don't match
+    Add 1 to uncorrectedErrors variables
+Return the length of the testWord and the number of uncorrectedErrors
+Add the length of testWord and uncorrectedErrors to running total
+Once time is up
+  Send the totals to budgetController.CalculateWPM();
+  Return the WPM to global controller
+Send WPM to UIController to display
+
+in typingArea eventListener
+If(keypressed == spacebar){
+  var typedWord = domStrings.typingArea.value;
+  var wordEnd = wordList.indexOf(' ', 0)
+  var testWord = wordList.slice(0,wordEnd);
+
+  var uncorrectedErrors = 0;
+  var i = 0;
+  while(i < testWord.length){
+    var curTyped = typedWord.charAt(i);
+    var curTest = testWord.charAt(i);
+    if(curTyped !== curTest){
+      uncorrectedErrors++;
+    }
+    i++;
+  }
+  clear domStrings.typingArea //See budgety recap
+  delete wordList[0]; //Everything
+  return {
+    typedEntries: testWord.length,
+    errors: uncorrectedErrors};
+}
+
+finding testWord:
+  find index of ' '
+    wordEnd = wordList.indexOf(' ', 0) // 0 not necessary sets start
+  set everything up to that point as the testWord
+    testWord = wordList.slice(0, wordEnd);

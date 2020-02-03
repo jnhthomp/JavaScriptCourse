@@ -1,3 +1,11 @@
+/**********************
+ *COLORS:             *
+ *  Black: #292929;   *
+ *  Seafoam: #5AAA95; *
+ *  SkyBlue: #4ECDC4; *
+ *  Cream: #fffdd0;   *
+ **********************/
+
 body{
   background-color:#292929;
   font-family: Open Sans;
@@ -8,7 +16,7 @@ body{
 }
 
 h1{
-  color:#03dac6;
+  color:#5AAA95;
   text-align: center;
 }
 
@@ -18,7 +26,7 @@ button{
 .btn__restart{
   font-size: 2em;
   background-color: #292929 !important;
-  color:#03dac6;
+  color:#5AAA95;
   margin: 0px;
   width: 150%;
   height: 100%;
@@ -76,7 +84,7 @@ display: inline;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-  color: #03dac6;
+  color: #5AAA95;
   font-size: 1.25em;
 }
 

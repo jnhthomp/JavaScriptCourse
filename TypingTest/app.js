@@ -11,7 +11,7 @@ var TypeTestData = (function() {
    *      Word List     *
    **********************/
   // List of words to be typed
-  // Cannot exceed 10,000
+  // Cannot exceed 10,000 characters - number of words (for spaces)
   var wordList = ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at'];
 
   /********************************
@@ -92,6 +92,7 @@ var UIController = (function() {
   };
 
   // Formats the array of words to be displayed in UI
+  // Receives an array of words
   var formatWordList = function(wordList) {
     // Creates a strign from the array
     wordList = wordList.toString(wordList);
@@ -111,61 +112,87 @@ var UIController = (function() {
   // create a timer variable
   var timer2;
 
+  // Run countdown timer
   function countdownTimer() {
+    // Show the amount of seconds if seconds <= startTime
+    //  This should be always and I want it to show always anyway so I may take this out of the if statement
     if (seconds <= startTime) {
       document.getElementById(domStrings.timer).innerHTML = seconds;
     }
+    // Decrement the number of seconds by 1 until seconds reach 0
     if (seconds > 0) {
       seconds--;
-    } else {
+    } else { // Once seconds reaches 0
+      // Stop the interval function called timer2
       clearInterval(timer2);
+      // Set timer2 to false so it can be restarted
       timer2 = false;
+      // Things to do after timer stops
+      // Display a pop up telling user what WPM was
       alert('You type x WPM');
     }
   }
 
+  // This is used to reset the timer in the UI and for countdownTimer();
   var showSeconds = function() {
-    console.log('set seconds to 10');
-    seconds = 10;
+    //console.log('set seconds to 10');
+    // reset seconds to the startTime
+    seconds = startTime;
+    // Update the timer displayed in the UI
     document.getElementById(domStrings.timer).innerHTML = seconds;
   };
 
+  /********************
+   *      Public      *
+   ********************/
   return {
+    // Update the wordList to show in the UI
     updateWordList: function(wordList) {
-      console.log(wordList);
-      // since wordList is current a list with commas and no spaces we have to format to replace the commas with spaces
+      // The wordlist before editing
+      // console.log(wordList);
+      // since wordList is currently a list with commas and no spaces we have to format to replace the commas with spaces
+      // Formats the wordList that was passed and overwrites it with the formatted version
       wordList = formatWordList(wordList);
-      console.log(wordList);
+      // Show the formatted version
+      //   console.log(wordList);
+      // Update the UI with the newly formatted wordList
       document.getElementById(domStrings.wordList).textContent = wordList;
     },
     // returns list of domstrings
     getDomStrings: function() {
-      console.log('domStrings are: ' + domStrings.wordList + ' and ' + domStrings.resetButton);
+      // Test that domStringsare being retrieved correctly
+      //console.log('domStrings are: ' + domStrings.wordList + ' and ' + domStrings.resetButton);
+      // Return the domStrings to other controllers
       return domStrings;
     },
 
+    // Run the countdownTimer
     timerStart: function() {
       countdownTimer();
     },
 
+    // Repeatedly triggers the countdown timer every second
     timerStart2: function() {
-      console.log(timer2);
+      // Display current value of timer2
+      //   Should be false so that the below if statement can begin
+      //   console.log(timer2);
       if (!timer2) {
+        // timer2 will be a function that is activated every 1000ms (1s)
+        //   The function it will activate is timerstart(); (countdownTimer();)
         timer2 = window.setInterval(function() {
           UIController.timerStart();
         }, 1000);
       }
     },
 
+    // Runs showSeconds to reset the timer for the functionality and UI
     resetTimer: function() {
       showSeconds();
     }
   };
 })();
 
-var Controller = (function() {
 
-})();
 
 
 
@@ -195,27 +222,46 @@ var mainController = (function(TypeTestData, UIController) {
     // console.log(domStrings);
     // Access domStrings to set event listeners on
     document.getElementById(domStrings.resetButton).addEventListener("click", function() {
+      // Run the init function to reset the UI
+      // If I add anything that init would reset later I should create a seperate function
       mainController.init();
     });
 
+    // Event listener for the typing area
+    // Will start a timer when they begin typing anything
+    // When 'space' is pressed it will check that the word that was entered is correct
+    document.getElementById(domStrings.typingArea).addEventListener('keypress', function(event) {
+      // If spacebar is pressed check the entered word against the test word
+      if (event.keyCode == 13) {
 
-    document.getElementById(domStrings.typingArea).onkeydown = function() {
+      }
+      // If any key is pressed start the timer
+      // Timer will continue as normal with additional keypresses
       UIController.timerStart2(timer);
-    };
+    });
   };
 
+  // Reset the timer
   var resetTimer = function() {
     UIController.resetTimer();
   };
 
+  /********************
+   *      Public      *
+   ********************/
   return {
+    // Set up page and functions
     init: function() {
+      // Generate wordList
       setTestWords();
-      //UIController.timerStart();
+      // Setup event listeners
+      //  reset button, typing area etc.
       setupEventListeners();
+      // Set timer back to starting number
       resetTimer();
     }
   };
 })(TypeTestData, UIController);
 
+// Initialize page functionality
 mainController.init();
