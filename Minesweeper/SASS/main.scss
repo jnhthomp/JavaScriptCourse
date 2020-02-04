@@ -1,0 +1,149 @@
+// run in project folder cmd: sass --watch style.scss:style.css
+/*
+Trying for a Neumorphism look
+How to:
+  Apply to individual containers
+  Rounded corners
+  Use same color as background color
+    Add darker shadow to bottom and right
+    Add lighter shadow to top and left
+    Lower opacity if too intense
+    Try x size = 9px y size = 9px and blur = 7;
+
+  SEE .gameContainer border-radius and box-shadow
+*/
+
+
+
+/************************
+ *      Color List      *
+ ************************/
+$base-color: #383838;
+$base-shadow-light: #404040;
+//$base-shadow-dark: #000000;
+$base-shadow-dark: #2c2c2c;
+  /**************************************
+   *  Alternate Color Options           *
+   *    $base-color: #1c1c1c;           *
+   *    $base-color-light: #2c2c2c;     *
+   **************************************/
+
+
+
+/******************
+ *      Sizes     *
+ ******************/
+
+ $gameContainerHeight: 400px;
+ $gameContainerWidth: 400px;
+
+ $bottomRightShadow: 7px;
+ $topLeftShadow: ($bottomRightShadow * (-1));
+ $largeBoxShadow: $bottomRightShadow $bottomRightShadow 7px $base-shadow-dark, $topLeftShadow $topLeftShadow 7px $base-shadow-light;
+
+
+body{
+  background-color: $base-color;
+}
+
+h1{
+  text-align: center;
+  width: 400px;
+}
+
+.title{
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  margin-left: -200px;
+}
+
+.gameContainer{
+  // Set main color
+  background-color: $base-color;
+  // Set size of game field
+  height: $gameContainerHeight;
+  width: $gameContainerWidth;
+  // position the div in the middle horizontally
+  position: absolute;
+  left: 50%;
+  top:40%;
+  margin-left: ($gameContainerWidth/2) * (-1);
+  margin-top: 30px;
+
+  // temporary. Remove after getting Neumorphism settings set
+  //border: 2px solid #1c1c1c;
+  border-radius: 15px;
+  box-shadow: $largeBoxShadow;
+
+}
+
+.infoContainer{
+  background-color: $base-color;
+  width: $gameContainerWidth;
+  height: $gameContainerHeight/4;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: ($gameContainerWidth/2)*(-1);
+  margin-top: ($gameContainerHeight/2) * (-1);
+  border-radius: 15px;
+  box-shadow: $largeBoxShadow;
+  padding-top: 20px;
+  padding-bottom: -10px;
+  display: grid;
+  grid-template-columns: 10px 1fr 1fr 1fr 10px;
+  grid-auto-rows: 70%;
+  column-gap: 20px;
+  grid-row-gap: 10px;
+}
+
+.bombCount{
+  grid-column-start: 2;
+  grid-column-end: 2;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: ($bottomRightShadow - 3) ($bottomRightShadow - 3) 7px $base-shadow-dark, ($topLeftShadow + 3) ($topLeftShadow + 3) 7px $base-shadow-light;
+}
+
+.resetButton{
+  grid-column-start: 3;
+  grid-column-end: 3;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: ($bottomRightShadow - 3) ($bottomRightShadow - 3) 7px $base-shadow-dark, ($topLeftShadow + 3) ($topLeftShadow + 3) 7px $base-shadow-light;
+}
+
+.timer{
+  grid-column-start: 4;
+  grid-column-end: 4;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: ($bottomRightShadow - 3) ($bottomRightShadow - 3) 7px $base-shadow-dark, ($topLeftShadow + 3) ($topLeftShadow + 3) 7px $base-shadow-light;
+}
+
+
+// .bombCount{
+//   position: absolute;
+//   top: 50%;
+//   -ms-transform: translateY(-50%);
+//   transform: translateY(-50%);
+//   float: left;
+//   margin-left: 10px;
+//   width: 20%;
+//   height: 50%;
+//   border-radius: 25px;
+//   box-shadow: ($bottomRightShadow - 3) ($bottomRightShadow - 3) 7px $base-shadow-dark, ($topLeftShadow + 3) ($topLeftShadow + 3) 7px $base-shadow-light;;
+//   text-align: center;
+//   padding: 10px;
+//
+// }
+//
+// .resetButton{
+//   position: absolute;
+//   top: 50%;
+//   -ms-transform: translateY(-50%);
+//   transform: translateY(-50%);
+//   float: left;
+//   margin-left: 20px;
+// }

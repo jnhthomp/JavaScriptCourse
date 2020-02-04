@@ -16,7 +16,7 @@ var TypeTestData = (function() {
   var totals = {
     allTypedEntries: 0,
     uncorrectedErrors: 0
-  }
+  };
   /********************************
    *      Randomize Word List     *
    ********************************/
@@ -67,28 +67,29 @@ var TypeTestData = (function() {
       return scoreTest(totals.allTypedEntries, totals.uncorrectedErrors);
     },
 
-    calcWordScore: function(typedWord, testWord){
+    calcWordScore: function(typedWord, testWord) {
       var uncorrectedErrors = 0;
       var i = 0;
       //console.log('Word to test: ' + testWord);
       //console.log('Length of word: ' + testWord[0].length);
-      if(testWord[0]){
-      while(i < testWord[0].length){
-        curTyped = typedWord.charAt(i);
-        curTest = testWord[0][i];
-        console.log('Typed: ' + curTyped + ' Test: ' + curTest);
-        if(curTyped !== curTest){
-          uncorrectedErrors++;
+      if (testWord[0]) {
+        while (i < testWord[0].length) {
+          curTyped = typedWord.charAt(i);
+          curTest = testWord[0][i];
+          console.log('Typed: ' + curTyped + ' Test: ' + curTest);
+          if (curTyped !== curTest) {
+            uncorrectedErrors++;
+          }
+          i++;
         }
-        i++;
-      }}
+      }
       return {
         wordLength: testWord[0].length + 1, // +1 for space
         wordErrors: uncorrectedErrors
       };
     },
 
-    updateTotals: function(wordScore){
+    updateTotals: function(wordScore) {
       totals.allTypedEntries += wordScore.wordLength;
       totals.uncorrectedErrors += wordScore.wordErrors;
       console.log('Current typed entries: ' + totals.allTypedEntries + ' Current error count: ' + totals.uncorrectedErrors);
@@ -204,7 +205,7 @@ var UIController = (function() {
       countdownTimer();
     },
 
-    clearUserInput: function(){
+    clearUserInput: function() {
       document.getElementById(domStrings.typingArea).value = '';
     },
 
@@ -279,7 +280,7 @@ var mainController = (function(TypeTestData, UIController) {
         // Get word typed by user (doesn't include the space)
         var typedWord = document.getElementById(domStrings.typingArea).value;
         console.log(typedWord[0]);
-        if(typedWord[0] === ' '){
+        if (typedWord[0] === ' ') {
           typedWord = typedWord.substr(1);
         }
         // Get word user was supposed to type

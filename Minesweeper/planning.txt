@@ -1,0 +1,79 @@
+Goal:
+  Create a playable version of Minesweeper
+
+What is needed:
+
+UI:
+  A field of clickable buttons(9x9) (10x10)(Generate HTML (please.))
+    Each button needs a unique id with column&row #
+      Ex: c01r0, c0r1, c0r2 etc.
+    Bombs that are assigned to each button (bomb locations array?)
+      Locations should be randomly generated
+      Bombs to button ratio (~1:9)
+    Player should be able to place flags
+      Right click adds and removes flags
+      Number of flags is limited to number of bombs
+      Flagged squares can't be activated
+
+  A number displaying bombs remaining
+
+  A timer counting up
+
+  A display showing when the user wins
+
+  A reset button to clear all bombs and reset mine buttons
+
+Data:
+  Creates bomb locations
+  Stores bomb locations
+  Stores flag locations
+  Removes flag locations
+  Calculate number of bombs touching a button after clicked
+
+Main:
+  Passes communications between UI and Data
+
+
+Process:
+  Page Load:
+    Page will load with 9x9 field of buttons
+    There will be a number displayed representing amount of flags
+    There will be a timer (starting at 0) that starts when the user clicks (later)
+
+  User leftClick
+    First click
+      Generate array of bomb locations(clicked button is invalid)
+      Go to every square touching the clicked square and read each ID
+        (make an array of touching squares?)
+        DO NOT INCLUDE FLAGGED SQUARES
+        Count number of matching ID's listed in bombLocations array
+        Display that number on the activated square
+        If no bombs are touching then activate all touching squares as well
+          Repeat above for all touching squares
+    2nd+ clicks
+      Go to every square touching the clicked square ad read each ID
+        (make an array of touching squares?)
+        DO NOT INCLUDE FLAGGED SQUARES
+        Count number of matching ID's listed in bombLocations array
+        Display that number on the activated square
+        If no bombs are touching then activate all touching squares as well
+          Repeat above for all touching squares
+
+    Clicks square with number
+      If number displayed <= number of flags touching
+        Activate all touching squares that do not have flags
+      If number displayed > number of flags touching
+        Do nothing
+
+  User rightClick
+    If no flag on button (is not in flag array)
+      Place a flag
+        Add to array of flag locations
+        Subtract 1 from bombCount
+        Ignore this square when checking for touching bombs and activating
+
+    If flag on button (is in flag array)
+      Remove flag
+        Remove from array of flag locations
+        Add 1 to bombCount
+        Activate this square when checking for touching bombs and activating
