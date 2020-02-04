@@ -12,8 +12,11 @@ var TypeTestData = (function() {
    **********************/
   // List of words to be typed
   // Cannot exceed 10,000 characters - number of words (for spaces)
-  var wordList = ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at'];
-
+  var wordList = ['test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test', 'test'];
+  var totals = {
+    allTypedEntries: 0,
+    uncorrectedErrors: 0
+  }
   /********************************
    *      Randomize Word List     *
    ********************************/
@@ -44,9 +47,10 @@ var TypeTestData = (function() {
    *      Score Test      *
    ************************/
   // Should be a good way to calculate WPM found here: https://www.speedtypingonline.com/typing-equations
-  var scoreTest = function(allTypedEntries, uncorrectedErrors, time) {
+  var scoreTest = function(allTypedEntries, uncorrectedErrors) {
     // Time may need divided by 60 since we are using seconds for our timer
-    wpm = ((allTypedEntries / 5) - uncorrectedErrors) / time;
+    wpm = ((allTypedEntries / 5) - uncorrectedErrors) / 1;
+    return wpm;
   };
 
   /******************************
@@ -59,8 +63,35 @@ var TypeTestData = (function() {
     },
 
     // Run calculations to find wpm
-    calcWPM: function(allTypedEntries, uncorrectedErrors, time) {
-      return scoreTest(allTypedEntries, uncorrectedErrors, time);
+    calcWPM: function() {
+      return scoreTest(totals.allTypedEntries, totals.uncorrectedErrors);
+    },
+
+    calcWordScore: function(typedWord, testWord){
+      var uncorrectedErrors = 0;
+      var i = 0;
+      //console.log('Word to test: ' + testWord);
+      //console.log('Length of word: ' + testWord[0].length);
+      if(testWord[0]){
+      while(i < testWord[0].length){
+        curTyped = typedWord.charAt(i);
+        curTest = testWord[0][i];
+        console.log('Typed: ' + curTyped + ' Test: ' + curTest);
+        if(curTyped !== curTest){
+          uncorrectedErrors++;
+        }
+        i++;
+      }}
+      return {
+        wordLength: testWord[0].length + 1, // +1 for space
+        wordErrors: uncorrectedErrors
+      };
+    },
+
+    updateTotals: function(wordScore){
+      totals.allTypedEntries += wordScore.wordLength;
+      totals.uncorrectedErrors += wordScore.wordErrors;
+      console.log('Current typed entries: ' + totals.allTypedEntries + ' Current error count: ' + totals.uncorrectedErrors);
     },
 
     // Store any methods used for testing functions in the TypeTestData controller
@@ -106,7 +137,7 @@ var UIController = (function() {
   };
 
   // Set how long the timer should run for
-  var startTime = 10;
+  var startTime = 60;
   // Set seconds to the starting time
   var seconds = startTime;
   // create a timer variable
@@ -129,7 +160,8 @@ var UIController = (function() {
       timer2 = false;
       // Things to do after timer stops
       // Display a pop up telling user what WPM was
-      alert('You type x WPM');
+      wpm = TypeTestData.calcWPM();
+      console.log('You type ' + wpm + ' WPM');
     }
   }
 
@@ -157,6 +189,7 @@ var UIController = (function() {
       //   console.log(wordList);
       // Update the UI with the newly formatted wordList
       document.getElementById(domStrings.wordList).textContent = wordList;
+      return wordList;
     },
     // returns list of domstrings
     getDomStrings: function() {
@@ -169,6 +202,10 @@ var UIController = (function() {
     // Run the countdownTimer
     timerStart: function() {
       countdownTimer();
+    },
+
+    clearUserInput: function(){
+      document.getElementById(domStrings.typingArea).value = '';
     },
 
     // Repeatedly triggers the countdown timer every second
@@ -202,17 +239,22 @@ var UIController = (function() {
  ****************************/
 // Handles interactions between TypeTestData and UIController
 var mainController = (function(TypeTestData, UIController) {
+  var words = {
+    ogWordList: '',
+    formattedWordList: ''
+  };
   // Creates a new wordList in TypeTestData
   // Passes this word list to UIController to update UI
   var setTestWords = function() {
     // Generate the randomized word list
     wordList = TypeTestData.createWordList();
+    words.ogWordList = wordList;
+    console.log(words.ogWordList);
     // console.log('mainController.setTestWords()' + wordList);
 
     // Update wordlist in UI
-    UIController.updateWordList(wordList);
-
-
+    words.formattedWordList = UIController.updateWordList(wordList);
+    console.log(words.formattedWordList);
   };
 
   // Setup buttons to be clicked
@@ -231,10 +273,33 @@ var mainController = (function(TypeTestData, UIController) {
     // Will start a timer when they begin typing anything
     // When 'space' is pressed it will check that the word that was entered is correct
     document.getElementById(domStrings.typingArea).addEventListener('keypress', function(event) {
+      console.log(event.keyCode);
       // If spacebar is pressed check the entered word against the test word
-      if (event.keyCode == 13) {
+      if (event.keyCode === 32) {
+        // Get word typed by user (doesn't include the space)
+        var typedWord = document.getElementById(domStrings.typingArea).value;
+        console.log(typedWord[0]);
+        if(typedWord[0] === ' '){
+          typedWord = typedWord.substr(1);
+        }
+        // Get word user was supposed to type
+        var testWord = wordList.slice(0, 1);
+        // Get score variables for the word
+        wordScore = TypeTestData.calcWordScore(typedWord, testWord);
+
+        // Add score variables total
+        TypeTestData.updateTotals(wordScore);
+        // Remove first entry from the wordlist in UI
+        words.ogWordList.shift();
+        words.formattedWordList = UIController.updateWordList(words.ogWordList);
+        console.log(words.formattedWordList.length);
+
+        // Clear user input
+        UIController.clearUserInput();
+
 
       }
+
       // If any key is pressed start the timer
       // Timer will continue as normal with additional keypresses
       UIController.timerStart2(timer);

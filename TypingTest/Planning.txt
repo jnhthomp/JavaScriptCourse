@@ -25,29 +25,18 @@ Outline:
 Future features:
 Adjust amount of time allowed for test
 
+Current Flow:
+Page load
+  mainController.init();
+    setTestWords();
+      Create wordList in TypeTestData.createWordList();
+        return result of randomizeWordList(wordList);
+          randomizeWordList(); shuffles TypeTestData.wordlist
+        retu
+    setupEventListeners
 
 
-scratch
-
-In typing area:
-When any key is pressed{
-start countdown timer
-}
-This happens when spacebar is pressed
-if(whatUserEnters == firstWord){// firstWord = word before space
- count number of letters of that word
- add to the score
- remove firstWord from wordList
- clear user input field
-} else {
-  compare the string the user entered to the word
-  See how many characters are different.
-  add number of letters to allTypedEntries
-  Add incorrect entries to uncorrectedErrors
-  remove firstWord from wordList
-  clear user input field
-}
-
+scratch:
 
 When space is pressed we want to
 Look at what user typed
