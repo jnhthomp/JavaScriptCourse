@@ -241,7 +241,21 @@ Populate the game field with buttons
             "c0r2 c1r2 c2r2 c3r2"
 */
 
+/*
+  To generate css:
+    Receive allIDs array, columnlength, rowlength
+    For each of the items in allIDs
+      create a row number of strings that are column number long (something like):
+        var genGridAreas = function(){
+       	    colStart = 0;
+            colEnd = colStart + (columnLength - 1)
 
+	    while(i < columnLength -1){
+	    gridAreasString = allIDs[colStart, colEnd] //get first section of string
+	}}
+      
+    Add this string into the dom under the gameField div
+*/
 
 /*
   To generate HTML
