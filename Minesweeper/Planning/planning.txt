@@ -1,6 +1,6 @@
 Goal:
   Create a playable version of Minesweeper
-
+  Use Figma to design
 What is needed:
 
 UI:
@@ -77,3 +77,19 @@ Process:
         Remove from array of flag locations
         Add 1 to bombCount
         Activate this square when checking for touching bombs and activating
+
+
+
+SCRATCH:
+
+we receive 2 numbers for grid dimensions (3 x 3)
+
+To create all possible column and grid names:
+
+c0r0 c1r0 c2r0
+
+create columnsArray
+  columnsArray = [];
+  while(i = 0; i<columns; i++;){
+    columnsArray = columnsArray.push(i);
+  }
