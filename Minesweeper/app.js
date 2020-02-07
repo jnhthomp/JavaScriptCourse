@@ -253,7 +253,7 @@ Populate the game field with buttons
 	    while(i < columnLength -1){
 	    gridAreasString = allIDs[colStart, colEnd] //get first section of string
 	}}
-      
+
     Add this string into the dom under the gameField div
 */
 
