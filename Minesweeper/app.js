@@ -47,7 +47,11 @@ var DataController = (function() {
       // Retrieve the allIds array
       getAllIDs: function() {
         return game.allIDs;
-      }
+      },
+
+      getPlaneIDs: function() {
+        return game.planeIDs;
+      },
     }
   };
 }());
@@ -66,6 +70,8 @@ var UIController = (function() {
   //  Holds DOM strings from HTML so we can manipulate them later
   var domStrings = {
     gameContainer: ".gameContainer",
+    gameContainerHTML: "gameContainer",
+    gameContainerID: 'field',
     gameButtonHTML: "fieldButton"
   };
 
@@ -77,17 +83,14 @@ var UIController = (function() {
     var className, element, html, newhtml;
     className = domStrings.gameButtonHTML; // General styling shared by all
     element = domStrings.gameContainer; // Container to insert HTML into
-    html = '<button class"%className%" id="%id%"></button>'; // HTML for button
+    html = '<button class="%className%" id="%id%" style="grid-area: %id%"></button>'; // HTML for button
 
     // Create a new string but replace %id% with the classname to be used
-    newhtml = html.replace('%className%', className);
-
     // Loop through the full array and generate HTML for each id in the array
     idArray.forEach(function(cur) {
-
+      newhtml = html.replace('%className%', className);
       // Replace %id% in the string with the current ID in the array
       newhtml = newhtml.replace('%id%', cur);
-
       // Add the generated HTML string to the dom
       //  Adds at the end of the previously selected DOM container
       document.querySelector(element).insertAdjacentHTML('beforeend', newhtml);
@@ -131,8 +134,45 @@ var UIController = (function() {
       });
     });
 
-    // UPDATE THIS TO RETURN AN OBJECT THAT RETURNS ROWS AND COLUMNS ARRAY TOO
-    return combosIDArray; // Return array of all possible IDs that was generated
+    return {
+      idArray: combosIDArray,
+      columnsArray: columnsArray,
+      rowsArray: rowsArray
+    }; // Return array of all possible IDs that was generated
+  };
+
+  var createCSSGrid = function(columns, rows, idArray) {
+    // For number of rows
+    // Save column number of items to a strings
+
+    var r, tempArray, string, gridAreaString;
+    r = 1;
+    tempArray = idArray;
+    gridAreaString = '';
+    while (r <= rows) {
+      string = tempArray.slice(0, columns);
+      string = string.toString();
+      string = '"' + string + '"';
+      gridAreaString = gridAreaString.concat(string);
+      tempArray = tempArray.slice(columns);
+      r++;
+    }
+
+    var fr = '1fr ';
+    var gridColumnString = fr.repeat(columns);
+    var gridRowString = fr.repeat(rows);
+    console.log(gridColumnString);
+    console.log(gridRowString);
+    return {
+      gridAreaString: gridAreaString,
+      gridColumnString: gridColumnString,
+      gridRowString: gridRowString
+    };
+
+  };
+
+  var genGameContainer = function(cssStrings) {
+
   };
 
   /*  Public Functions  */
@@ -141,9 +181,22 @@ var UIController = (function() {
     //  Generates a game grid of buttons given a number of columns and rows
     genGrid: function(columns, rows) {
       // Create an array of IDs to use to generate HTML
-      idArray = colrowToID(columns, rows);
+      var field = domStrings.gameContainerID;
+      var allArrays = colrowToID(columns, rows);
+      var idArray = allArrays.idArray;
+      var columnsArray = allArrays.columnsArray;
+      var rowsArray = allArrays.rowsArray;
+      var gridAreas = createCSSGrid(columns, rows, idArray);
+
+      document.getElementById(field).style.display = 'grid';
+      document.getElementById(field).style.gridTemplateAreas = gridAreas.gridAreaString;
+      document.getElementById(field).style.gridTemplateColumns = gridAreas.gridColumnString;
+      document.getElementById(field).style.gridTemplateRows = gridAreas.gridRowString;
       // Generate HTML with IDs
       genHTMLButtons(idArray);
+
+      // document.getElementById(domStrings.element).style.gridTemplateAreas = cssString;
+
       // Return the ID array that was used
       return idArray;
     },
@@ -172,6 +225,11 @@ var UIController = (function() {
         var idArray = colrowToID(2, 2);
         console.log(idArray);
       },
+
+      cssGrid: function() {
+        console.log(DataController.getGame.getAllIDs());
+        console.log(DataController.getGame.getPlaneIDs());
+      }
     }
   };
 })();
@@ -190,16 +248,15 @@ var MainController = (function(DataController, UIController) {
   var genGame = function() {
 
     //  1.  Set board size
-    var columns = 2; // Will later be fetched from UI
-    var rows = 2;
+    var columns = 10; // Will later be fetched from UI
+    var rows = 10;
 
     //  2.  Generate HTML based on board size
-    var allIDs = UIController.genGrid(2, 2);
+    var allIDs = UIController.genGrid(columns, rows);
 
     //  3.  Pass list of ID's to DataController
     //        Data controller will create bomb locations after first button     clicked
     DataController.setGame.setAllIDs(allIDs);
-    console.log(DataController.getGame.getAllIDs());
 
     //  4.  Generate css to organize html buttons based on board size
 

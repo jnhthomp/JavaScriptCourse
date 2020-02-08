@@ -51,7 +51,10 @@ body{
 
 h1{
   text-align: center;
+}
 
+button{
+  padding: 0 !important;
 }
 
 .allContainer{
@@ -149,30 +152,39 @@ h1{
   border-radius: 15px;
   box-shadow: $largeBoxShadow;
   // TESTING ONLY DELETE LATER: WILL BE GENERATED
-  display: grid;
-  grid-template-columns:1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas:
-    "c0r0 c1r0"
-    "c0r1 c1r1";
-  grid-column-gap: 5px;
-  grid-row-gap: 5px;
+  // display: grid;
+  // grid-template-columns:1fr 1fr;
+  // grid-template-rows: 1fr 1fr;
+  // grid-template-areas:
+  //   "c0r0 c1r0"
+  //   "c0r1 c1r1";
+  // grid-column-gap: 5px;
+  // grid-row-gap: 5px;
 
+}
+
+.fieldButton {
+  background-color: $base-color;
+  border-radius: 5px;
+  box-shadow: $infoBoxesShadow;
+  border: none;
+  margin: 5px;
+  
 }
 
 //TESTING ONLY DELETE LATER: WILL BE GENERATED
-#c0r0{
-  grid-area: c0r0;
-}
-#c1r0{
-  grid-area: c1r0;
-}
-#c0r1{
-  grid-area: c0r1;
-}
-#c1r1{
-  grid-area: c1r1;
-}
+// #c0r0{
+//   grid-area: c0r0;
+// }
+// #c1r0{
+//   grid-area: c1r0;
+// }
+// #c0r1{
+//   grid-area: c0r1;
+// }
+// #c1r1{
+//   grid-area: c1r1;
+// }
 
 
 .blankLeft{
