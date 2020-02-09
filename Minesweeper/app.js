@@ -21,16 +21,127 @@ var DataController = (function() {
   /*  Game Object */
   //    Holds game info such as all of the ids, the numbers and rows that exist, which buttons have been clicked, the locations of bombs and where flags have been placed.
   var game = {
-    allIDs: [],
+
+    allIDs: [], // Will hold all IDs on the gameboard after they are created
     planeIDs: {
-      col: [],
-      row: []
+      col: [], // Store number of columns as an array
+      row: [] // Store number of rows as an aray
     },
+    // Place button IDs here after they have been activated
+    //  This will save some time when calculating whether or not a button should activate
     clickedIDs: [],
+    // Keep a list of buttons that are assigned a bomb
     bombIDs: [],
+    // List of buttons that cannot be activated because they are flagged
     flagIDs: []
   };
 
+  // Object for each grid button in the game
+  // Will hold important information regarding it and the buttons around it
+  // These functions will run when it is generated
+  // This means all fields should have a value at game start.
+  var GridButton = function(id, column, row) {
+    this.id = id;
+    this.column = column;
+    this.row = row;
+    this.touching = touching;
+    this.touchingBombs = touchingBombs;
+    this.flag = flag;
+    this.bomb = bomb;
+  };
+
+  // Prototype for GridButton so all instances have access to their own copy
+  // Will calculate the ID's of other buttons that it is touching
+  // Stores the result into this.touching
+  GridButton.protype.findTouching = function() {
+    var tlc, tlr, /**/ tmc, tmr, /**/ trc, trr,
+      mlc, mlr, /**This button**/ mrc, mrr,
+      blc, blr, /**/ bmc, bmr, /**/ brc, brr;
+    // Find top left
+    tlc = (this.column - 1);
+    tlr = (this.row - 1);
+    findTouchingCalc(tlc, tlr);
+    // Find top middle
+    tmc = (this.column);
+    tmr = (this.row - 1);
+    findTouchingCalc(tmc, tmr);
+    // Find top right
+    trc = (this.column + 1);
+    trr = (this.row - 1);
+    findTouchingCalc(trc, trr);
+    // Find middle left
+    mlc = (this.column - 1);
+    mlr = (this.row);
+    findTouchingCalc(mlc, mlr);
+    // Find middle right
+    mrc = (this.column + 1);
+    mrr = (this.row);
+    findTouchingCalc(mrc, mrr);
+    // Find bottom left
+    blc = (this.column - 1);
+    blr = (this.row + 1);
+    findTouchingCalc(blc, blr);
+    // Find bottom middle
+    bmc = (this.column);
+    bmr = (this.row + 1);
+    findTouchingCalc(bmc, bmr);
+    // Find bottom right
+    brc = (this.colum + 1);
+    brr = (this.row + 1);
+    findTouchingCalc(brc, brr);
+    /*1,1 2,1 3,1
+      1,2 2,2 3,2
+      1,3 2,3 3,3
+    */
+    var findTouchingCalc = function(checkColumn, checkRow) {
+      var c, r, id;
+      if (checkColumn < 0 || checkColumn > game.planeIDs.col.length - 1) {
+        c = -1;
+      } else {
+        c = checkColumn;
+      }
+      if (checkRow < 0 || checkRow > game.planeIDs.row.length - 1) {
+        r = -1;
+      } else {
+        r = checkRow;
+      }
+      id = 'c' + c + 'r' + r;
+      this.touching.push(id);
+    };
+  };
+  var createGameObjects = function(idArray, column, row) {
+    game.allIDs.forEach(function(cur) {
+      newItem = new GridButton(cur, column, row);
+    });
+  };
+
+  // Generate bomb locations
+  var genBombLocations = function() {
+    // Go through idArray and select 10 random items
+    var i = 1;
+    var idsArray = game.allIDs;
+    var tempBombArray = [];
+    while (i <= (idsArray.length * 0.1)) {
+      // Generate a random number to use as an index of the array
+      //   0 - Array.length - 1
+      var randomIndex = Math.floor(Math.random() * Math.floor(idsArray.length - 1));
+
+      // Save the id at the generated index
+      var bombID = idsArray[randomIndex];
+      // Check that the id is not in the array already before adding
+      if (tempBombArray.indexOf(bombID) == -1) {
+        // If not then add it and increase counter
+        tempBombArray.push(bombID);
+        console.log(tempBombArray);
+        i++;
+      } else {
+        //console.log('Duplicate found tossing');
+      }
+    }
+    // Save array to game.bombIDs;
+    game.bombIDs = tempBombArray;
+    console.log(game.bombIDs);
+  };
   /*  Public Functions  */
   return {
     /*  setGame */
@@ -48,11 +159,19 @@ var DataController = (function() {
       getAllIDs: function() {
         return game.allIDs;
       },
-
+      // Retreive column/row arrays
+      // Can be used to help figure out where on the board a button is and what surrounds it
       getPlaneIDs: function() {
         return game.planeIDs;
       },
+    },
+
+    testing: {
+      genBombLocations: function() {
+        genBombLocations();
+      }
     }
+
   };
 }());
 
@@ -69,44 +188,10 @@ var UIController = (function() {
   /*  DOM Strings */
   //  Holds DOM strings from HTML so we can manipulate them later
   var domStrings = {
-    gameContainer: ".gameContainer",
-    gameContainerHTML: "gameContainer",
-    gameContainerID: 'field',
-    gameButtonHTML: "fieldButton"
-  };
-
-  /*  Generate HTML Buttons*/
-  //  Generates the clickable buttons on the game field
-  var genHTMLButtons = function(idArray) {
-    // Create HTML buttons with a given column and row size
-    // Set up variables needed to create id and insert into dom
-    var className, element, html, newhtml;
-    className = domStrings.gameButtonHTML; // General styling shared by all
-    element = domStrings.gameContainer; // Container to insert HTML into
-    html = '<button class="%className%" id="%id%" style="grid-area: %id%"></button>'; // HTML for button
-
-    // Create a new string but replace %id% with the classname to be used
-    // Loop through the full array and generate HTML for each id in the array
-    idArray.forEach(function(cur) {
-      newhtml = html.replace('%className%', className);
-      // Replace %id% in the string with the current ID in the array
-      newhtml = newhtml.replace('%id%', cur);
-      // Add the generated HTML string to the dom
-      //  Adds at the end of the previously selected DOM container
-      document.querySelector(element).insertAdjacentHTML('beforeend', newhtml);
-    });
-  };
-
-  /*  Create Column/Row Array*/
-  //  Takes a length and creates an array with 0 based numbers of equal length
-  var createColRowArray = function(columns) {
-    var i = 0; // Counter for while loop
-    var columnsArray = []; // Empty array to fill
-    while (i < columns) { // Not equal to because labels start at 0
-      columnsArray.push(i); // Add current value of i to the end of the array
-      i++; // Increment i
-    }
-    return columnsArray; // Return the created array
+    gameContainer: ".gameContainer", //CSS class holds all game buttons
+    gameContainerHTML: "gameContainer", // HTML class holds all game buttons
+    gameContainerID: 'field', //HTML ID for gameboard
+    gameButtonHTML: "fieldButton" //HTML class for buttons on the field
   };
 
   /*  Column/Row to ID  */
@@ -134,45 +219,95 @@ var UIController = (function() {
       });
     });
 
+    // Returns an object containing the idArray used
+    // Also returns columns and rows array generated
     return {
-      idArray: combosIDArray,
+      idArray: combosIDArray, // Return array of all possible IDs that was generated
       columnsArray: columnsArray,
       rowsArray: rowsArray
-    }; // Return array of all possible IDs that was generated
+    };
   };
 
-  var createCSSGrid = function(columns, rows, idArray) {
-    // For number of rows
-    // Save column number of items to a strings
+  /*  Create Column/Row Array*/
+  //  Takes a length and creates an array with 0 based numbers of equal length
+  var createColRowArray = function(columns) {
+    var i = 0; // Counter for while loop
+    var columnsArray = []; // Empty array to fill
+    while (i < columns) { // Not equal to because labels start at 0
+      columnsArray.push(i); // Add current value of i to the end of the array
+      i++; // Increment i
+    }
+    return columnsArray; // Return the created array
+  };
 
+  // Creates a css grid string based on the size of the grid
+  // Will repeate 1fr * columns as many times as there are rows
+  // Then adds this string to
+  var createCSSGrid = function(columns, rows, idArray) {
     var r, tempArray, string, gridAreaString;
-    r = 1;
-    tempArray = idArray;
-    gridAreaString = '';
-    while (r <= rows) {
+    r = 1; // Set counter to loop through rows
+    tempArray = idArray; // Save a copy of the array (may not be necessary)
+    gridAreaString = ''; // Create an empty string to push our css string into
+    while (r <= rows) { //Do this stuff once for every row
+      // string becomes the first (column) number of items from the idArray
       string = tempArray.slice(0, columns);
-      string = string.toString();
-      string = '"' + string + '"';
-      gridAreaString = gridAreaString.concat(string);
-      tempArray = tempArray.slice(columns);
-      r++;
+      string = string.toString(); // Convert the array to a string
+      string = '"' + string + '"'; // Format it so it creates a line in CSSgrid
+      gridAreaString = gridAreaString.concat(string); // Add it to the end of the larger strign
+      tempArray = tempArray.slice(columns); // remove the ids we just used
+      r++; // Create the next row
     }
 
+    // Standard size a button should take up
     var fr = '1fr ';
+    // Repeat the column size over the number of columns
     var gridColumnString = fr.repeat(columns);
+    // Repeat the row size over the number of rows
     var gridRowString = fr.repeat(rows);
-    console.log(gridColumnString);
-    console.log(gridRowString);
+    // Returns an object with the 3 strings we generated
     return {
-      gridAreaString: gridAreaString,
-      gridColumnString: gridColumnString,
-      gridRowString: gridRowString
+      gridAreaString: gridAreaString, // String CSS for positioning
+      gridColumnString: gridColumnString, // String CSS for column size
+      gridRowString: gridRowString // String CSS for row size
     };
-
   };
 
-  var genGameContainer = function(cssStrings) {
+  // Create DOM Element for gamefield
+  // Insert appropriate CSS into created dom element
+  var genGameContainer = function(gridAreas, field) {
+    // Set display: grid on gameContainer
+    document.getElementById(field).style.display = 'grid';
+    // Set the grid-template (list of IDs shaped as grid)
+    document.getElementById(field).style.gridTemplateAreas = gridAreas.gridAreaString;
+    // Set the columns sizes
+    document.getElementById(field).style.gridTemplateColumns = gridAreas.gridColumnString;
+    // Set the row sizes
+    document.getElementById(field).style.gridTemplateRows = gridAreas.gridRowString;
+  };
 
+
+  /*  Generate HTML Buttons*/
+  //  Generates the clickable buttons on the game field
+  var genHTMLButtons = function(idArray) {
+    // Create HTML buttons with a given column and row size
+    // Set up variables needed to create id and insert into dom
+    var className, element, html, newhtml;
+    className = domStrings.gameButtonHTML; // General styling shared by all
+    element = domStrings.gameContainer; // Container to insert HTML into
+    html = '<button class="%className%" id="%id%" style="grid-area: %id%"></button>'; // HTML for button
+
+    // Create a new string but replace %id% with the ID to be used
+    // Loop through the full array and generate HTML for each id in the array
+    idArray.forEach(function(cur) {
+      // Set the classname
+      newhtml = html.replace('%className%', className);
+      // Replace %id% in the string with the current ID in the array
+      // Sets the id for css and also assigns to grid area.
+      newhtml = newhtml.replace('%id%', cur);
+      // Add the generated HTML string to the dom
+      //  Adds at the end of the previously selected DOM container
+      document.querySelector(element).insertAdjacentHTML('beforeend', newhtml);
+    });
   };
 
   /*  Public Functions  */
@@ -181,21 +316,21 @@ var UIController = (function() {
     //  Generates a game grid of buttons given a number of columns and rows
     genGrid: function(columns, rows) {
       // Create an array of IDs to use to generate HTML
+      // The ID for the DOM element that the game will take place in
       var field = domStrings.gameContainerID;
+      // Returns an object containing 3 arrays
       var allArrays = colrowToID(columns, rows);
-      var idArray = allArrays.idArray;
-      var columnsArray = allArrays.columnsArray;
-      var rowsArray = allArrays.rowsArray;
-      var gridAreas = createCSSGrid(columns, rows, idArray);
+      var idArray = allArrays.idArray; // Isolate idArray from object
+      var columnsArray = allArrays.columnsArray; // Isolate columnsArray
+      var rowsArray = allArrays.rowsArray; // Isolate rowsArray
 
-      document.getElementById(field).style.display = 'grid';
-      document.getElementById(field).style.gridTemplateAreas = gridAreas.gridAreaString;
-      document.getElementById(field).style.gridTemplateColumns = gridAreas.gridColumnString;
-      document.getElementById(field).style.gridTemplateRows = gridAreas.gridRowString;
+      // Creaete an array of all possible IDs based on desired colums/rows
+      var gridAreas = createCSSGrid(columns, rows, idArray);
+      // Create the gameContainer to hold buttons
+      genGameContainer(gridAreas, field);
+
       // Generate HTML with IDs
       genHTMLButtons(idArray);
-
-      // document.getElementById(domStrings.element).style.gridTemplateAreas = cssString;
 
       // Return the ID array that was used
       return idArray;
@@ -224,11 +359,6 @@ var UIController = (function() {
       colrowToID: function() {
         var idArray = colrowToID(2, 2);
         console.log(idArray);
-      },
-
-      cssGrid: function() {
-        console.log(DataController.getGame.getAllIDs());
-        console.log(DataController.getGame.getPlaneIDs());
       }
     }
   };
@@ -251,17 +381,12 @@ var MainController = (function(DataController, UIController) {
     var columns = 10; // Will later be fetched from UI
     var rows = 10;
 
-    //  2.  Generate HTML based on board size
+    //  2.  Generate HTML (and CSS) based on board size
     var allIDs = UIController.genGrid(columns, rows);
 
     //  3.  Pass list of ID's to DataController
     //        Data controller will create bomb locations after first button     clicked
     DataController.setGame.setAllIDs(allIDs);
-
-    //  4.  Generate css to organize html buttons based on board size
-
-
-
   };
 
   /*  Public Functions  */
@@ -276,50 +401,3 @@ var MainController = (function(DataController, UIController) {
 
 // Initialize the page
 MainController.init();
-
-
-/*
-Populate the game field with buttons
-  Know what html to generate
-    HTML must include class="fieldButton" and id="c%0-R%0"
-      where %0 changes based on location in grid
-  Know what CSS to generate
-    Add attributes to gameContainer
-      grid-template-columns: even spacing between all buttons
-        generate the appropriate number of columns based on size
-        Use a loop for this
-      grid-template-rows: even spacing between all columns
-        generate the appropriate number of columns based onn size
-        Use a loop for this
-      grid-row-gap: add a little room for buttons to breath
-      grid-template-areas: Generate CSS to lay out buttons by id name
-        ex: "c0r0 c1r0 c2r0 c3r0"
-            "c0r1 c1r1 c2r1 c3r1"
-            "c0r2 c1r2 c2r2 c3r2"
-*/
-
-/*
-  To generate css:
-    Receive allIDs array, columnlength, rowlength
-    For each of the items in allIDs
-      create a row number of strings that are column number long (something like):
-        var genGridAreas = function(){
-       	    colStart = 0;
-            colEnd = colStart + (columnLength - 1)
-
-	    while(i < columnLength -1){
-	    gridAreasString = allIDs[colStart, colEnd] //get first section of string
-	}}
-
-    Add this string into the dom under the gameField div
-*/
-
-/*
-  To generate HTML
-    Know column and row size (set manually for now 2x2)
-    Generate array of IDs
-    Pass to genHTMLButtons(idArray);
-      idArray.forEach(function(){
-
-    }());
-*/
