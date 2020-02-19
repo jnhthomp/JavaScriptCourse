@@ -53,7 +53,7 @@ var DataController = (function() {
   // Prototype for GridButton so all instances have access to their own copy
   // Will calculate the ID's of other buttons that it is touching
   // Stores the result into this.touching
-  GridButton.protype.findTouching = function() {
+  GridButton.prototype.findTouching = function() {
     var tlc, tlr, /**/ tmc, tmr, /**/ trc, trr,
       mlc, mlr, /**This button**/ mrc, mrr,
       blc, blr, /**/ bmc, bmr, /**/ brc, brr;
@@ -109,9 +109,12 @@ var DataController = (function() {
       this.touching.push(id);
     };
   };
-  var createGameObjects = function(idArray, column, row) {
-    game.allIDs.forEach(function(cur) {
-      newItem = new GridButton(cur, column, row);
+  // Create the new object and add it to an array
+  var createGameObjects = function() {
+    var col = 0;
+    var row = 0;
+    game.allIDs.forEach(function(cur){
+      console.log(indexOf(cur));
     });
   };
 
@@ -169,6 +172,10 @@ var DataController = (function() {
     testing: {
       genBombLocations: function() {
         genBombLocations();
+      },
+
+      createGameObjects: function(){
+        createGameObjects();
       }
     }
 
