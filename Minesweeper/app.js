@@ -23,7 +23,7 @@ var DataController = (function() {
   var game = {
 
     allIDs: [], // Will hold all IDs on the gameboard after they are created
-    planeIDs: {
+    plainIDs: {
       col: [], // Store number of columns as an array
       row: [] // Store number of rows as an aray
     },
@@ -33,7 +33,9 @@ var DataController = (function() {
     // Keep a list of buttons that are assigned a bomb
     bombIDs: [],
     // List of buttons that cannot be activated because they are flagged
-    flagIDs: []
+    flagIDs: [],
+
+    objects: []
   };
 
   // Object for each grid button in the game
@@ -44,10 +46,10 @@ var DataController = (function() {
     this.id = id;
     this.column = column;
     this.row = row;
-    this.touching = touching;
-    this.touchingBombs = touchingBombs;
-    this.flag = flag;
-    this.bomb = bomb;
+    // this.touching = touching;
+    // this.touchingBombs = touchingBombs;
+    // this.flag = flag;
+    // this.bomb = bomb;
   };
 
   // Prototype for GridButton so all instances have access to their own copy
@@ -95,12 +97,12 @@ var DataController = (function() {
     */
     var findTouchingCalc = function(checkColumn, checkRow) {
       var c, r, id;
-      if (checkColumn < 0 || checkColumn > game.planeIDs.col.length - 1) {
+      if (checkColumn < 0 || checkColumn > game.plainIDs.col.length - 1) {
         c = -1;
       } else {
         c = checkColumn;
       }
-      if (checkRow < 0 || checkRow > game.planeIDs.row.length - 1) {
+      if (checkRow < 0 || checkRow > game.plainIDs.row.length - 1) {
         r = -1;
       } else {
         r = checkRow;
@@ -113,8 +115,14 @@ var DataController = (function() {
   var createGameObjects = function() {
     var col = 0;
     var row = 0;
-    game.allIDs.forEach(function(cur){
-      console.log(indexOf(cur));
+    game.allIDs.forEach(function(cur) {
+      newItem = new GridButton(cur, col, row);
+      game.objects.push(newItem);
+      col++;
+      if (col >= game.plainIDs.col.length) {
+        col = 0;
+        row++;
+      }
     });
   };
 
@@ -153,6 +161,11 @@ var DataController = (function() {
       // Save the array of IDs to the game object
       setAllIDs: function(allIDs) {
         game.allIDs = allIDs;
+      },
+
+      setPlainIDs: function(col, row) {
+        game.plainIDs.col = col;
+        game.plainIDs.row = row;
       }
     },
     /*  getGame  */
@@ -164,9 +177,13 @@ var DataController = (function() {
       },
       // Retreive column/row arrays
       // Can be used to help figure out where on the board a button is and what surrounds it
-      getPlaneIDs: function() {
-        return game.planeIDs;
+      getPlainIDs: function() {
+        return game.plainIDs;
       },
+
+      getObjects: function() {
+        return game.objects;
+      }
     },
 
     testing: {
@@ -174,7 +191,7 @@ var DataController = (function() {
         genBombLocations();
       },
 
-      createGameObjects: function(){
+      createGameObjects: function() {
         createGameObjects();
       }
     }
@@ -219,8 +236,8 @@ var UIController = (function() {
     //    same as above
     //  Repeat all the way through rows array
     // Go through second item in columns array etc...
-    columnsArray.forEach(function(c) {
-      rowsArray.forEach(function(r) {
+    rowsArray.forEach(function(r) {
+      columnsArray.forEach(function(c) {
         id = 'c' + c + 'r' + r;
         combosIDArray.push(id);
       });
@@ -340,7 +357,7 @@ var UIController = (function() {
       genHTMLButtons(idArray);
 
       // Return the ID array that was used
-      return idArray;
+      return allArrays;
     },
 
     /*  Testing */
@@ -389,11 +406,14 @@ var MainController = (function(DataController, UIController) {
     var rows = 10;
 
     //  2.  Generate HTML (and CSS) based on board size
-    var allIDs = UIController.genGrid(columns, rows);
+    var allArrays = UIController.genGrid(columns, rows);
+
+    // 2.5 update plainIDs
+    DataController.setGame.setPlainIDs(allArrays.columnsArray, allArrays.rowsArray);
 
     //  3.  Pass list of ID's to DataController
     //        Data controller will create bomb locations after first button     clicked
-    DataController.setGame.setAllIDs(allIDs);
+    DataController.setGame.setAllIDs(allArrays.idArray);
   };
 
   /*  Public Functions  */
