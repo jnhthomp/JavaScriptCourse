@@ -93,41 +93,41 @@ var DataController = (function() {
     // console.log(game.bombIDs); ANSWER KEY!
   };
 
-  var updateObjectsBombs = function(){
+  var updateObjectsBombs = function() {
     // Cycle through each object in game.objects
-    game.objects.forEach(function(cur){
+    game.objects.forEach(function(cur) {
       // See if the ID of the current object is in bombIDs
       // Create a new attribute for the object called isBomb
       //  If it is in bombIDs then assign 'true' to that object
-      if(game.bombIDs.indexOf(cur.id) == -1){
+      if (game.bombIDs.indexOf(cur.id) == -1) {
         cur.isBomb = false;
-      }//  If not a bomb assign 'false' to that object
-      else{
+      } //  If not a bomb assign 'false' to that object
+      else {
         cur.isBomb = true;
       }
     });
 
   };
 
-  var setFlag = function(id, bool){
+  var setFlag = function(id, bool) {
     // Set state of flag in game.objects w/ matching ID
     // Keep game.flagIDs up to date
     var obj = findObj(id);
     // console.log(obj);
-    if(bool == true){
+    if (bool == true) {
       obj.flag = true;
       //console.log(obj);
-    } else{
+    } else {
       obj.flag = false;
       //console.log(obj);
-    };
+    }
   };
 
   // Find the object in game.objects with a matching ID
-  var findObj = function(checkid){
+  var findObj = function(checkid) {
     var found;
-    game.objects.forEach(function(cur){
-      if(cur.id === checkid){
+    game.objects.forEach(function(cur) {
+      if (cur.id === checkid) {
         found = cur;
       }
     });
@@ -135,101 +135,106 @@ var DataController = (function() {
     return found;
   };
 
-var calcTouch = function(obj){
-  var tlc, tlr, /**/ tmc, tmr, /**/ trc, trr,
-    mlc, mlr, /**This button**/ mrc, mrr,
-    blc, blr, /**/ bmc, bmr, /**/ brc, brr,
-    topLeft, topMiddle, topRight,
-    middleLeft, /*this*/ middleRight,
-    bottomLeft, bottomMiddle, bottomRight;
+  var calcTouch = function(obj) {
+    var tlc, tlr, /**/ tmc, tmr, /**/ trc, trr,
+      mlc, mlr, /**This button**/ mrc, mrr,
+      blc, blr, /**/ bmc, bmr, /**/ brc, brr,
+      topLeft, topMiddle, topRight,
+      middleLeft, /*this*/ middleRight,
+      bottomLeft, bottomMiddle, bottomRight;
 
-  var checkArray = [];
-  var touchArray = [];
+    var checkArray = [];
+    var touchArray = [];
 
-  // Get column and row of given button
-  var col = obj.column;
-  var row = obj.row;
+    // Get column and row of given button
+    var col = obj.column;
+    var row = obj.row;
 
-  // Calc columns and rows for the 8 buttons that would be touching
+    // Calc columns and rows for the 8 buttons that would be touching
     /*1,1 2,1 3,1
       1,2 2,2 3,2
       1,3 2,3 3,3
     */
-  // Find top left
-  tlc = (col - 1);
-  tlr = (row - 1);
-  topLeft = 'c' + tlc + 'r' + tlr;
-  checkArray.push(topLeft);
+    // Find top left
+    tlc = (col - 1);
+    tlr = (row - 1);
+    topLeft = 'c' + tlc + 'r' + tlr;
+    checkArray.push(topLeft);
 
-  // Find top middle
-  tmc = (col);
-  tmr = (row - 1);
-  topMiddle = 'c' + tmc + 'r' + tmr;
-  checkArray.push(topMiddle);
+    // Find top middle
+    tmc = (col);
+    tmr = (row - 1);
+    topMiddle = 'c' + tmc + 'r' + tmr;
+    checkArray.push(topMiddle);
 
-  // Find top right
-  trc = (col + 1);
-  trr = (row - 1);
-  topRight = 'c' + trc + 'r' + trr;
-  checkArray.push(topRight);
+    // Find top right
+    trc = (col + 1);
+    trr = (row - 1);
+    topRight = 'c' + trc + 'r' + trr;
+    checkArray.push(topRight);
 
-  // Find middle left
-  mlc = (col - 1);
-  mlr = (row);
-  middleLeft = 'c' + mlc + 'r' + mlr;
-  checkArray.push(middleLeft);
+    // Find middle left
+    mlc = (col - 1);
+    mlr = (row);
+    middleLeft = 'c' + mlc + 'r' + mlr;
+    checkArray.push(middleLeft);
 
-  // Find middle right
-  mrc = (col + 1);
-  mrr = (row);
-  middleRight = 'c' + mrc + 'r' + mrr;
-  checkArray.push(middleRight);
+    // Find middle right
+    mrc = (col + 1);
+    mrr = (row);
+    middleRight = 'c' + mrc + 'r' + mrr;
+    checkArray.push(middleRight);
 
-  // Find bottom left
-  blc = (col - 1);
-  blr = (row + 1);
-  bottomLeft = 'c' + blc + 'r' + blr;
-  checkArray.push(bottomLeft);
+    // Find bottom left
+    blc = (col - 1);
+    blr = (row + 1);
+    bottomLeft = 'c' + blc + 'r' + blr;
+    checkArray.push(bottomLeft);
 
-  // Find bottom middle
-  bmc = (col);
-  bmr = (row + 1);
-  bottomMiddle = 'c' + bmc + 'r' + bmr;
-  checkArray.push(bottomMiddle);
+    // Find bottom middle
+    bmc = (col);
+    bmr = (row + 1);
+    bottomMiddle = 'c' + bmc + 'r' + bmr;
+    checkArray.push(bottomMiddle);
 
-  // Find bottom right
-  brc = (col + 1);
-  brr = (row + 1);
-  bottomRight = 'c' + brc + 'r' + brr;
-  checkArray.push(bottomRight);
+    // Find bottom right
+    brc = (col + 1);
+    brr = (row + 1);
+    bottomRight = 'c' + brc + 'r' + brr;
+    checkArray.push(bottomRight);
 
 
-  // See if that ID is listed in all IDs to double check that it is valid
-  checkArray.forEach(function(cur){
-    // Find if ID is in game.allIDs
-    if(game.allIDs.indexOf(cur) !== -1){
-      touchArray.push(cur);
-    };
-  });
-  // If not valid do nothing and move on to the next
-  // If it is valid add it to an array inside the current object called touching
-  console.log(touchArray);
-  return touchArray;
-};
+    // See if that ID is listed in all IDs to double check that it is valid
+    checkArray.forEach(function(cur) {
+      // Find if ID is in game.allIDs
+      if (game.allIDs.indexOf(cur) !== -1) {
+        touchArray.push(cur);
+      }
+    });
+    // If not valid do nothing and move on to the next
+    // If it is valid add it to an array inside the current object called touching
+    //console.log(touchArray);
+    return touchArray;
+  };
 
-// Look through game.objects
-// For each object look at the array of touching buttons cur.touchArray
-var calcTouchBombs = function(obj){
-  touch = obj.touchArray
-  touch.forEach(function(cur){
-    game.bombIDs.indexOf(cur)
-  });
-}
-// For each ID in the array compare it to game.bombIDs
-//    If it is in game.bombIDs push to array touchingBombs
-//    If it is not in game.bombIDs do nothing
-// set cur.touchingBombs to the touchingBombs array just made
-// get length of touchingBombs and set value to cur.bombCount
+  // Look through game.objects
+  // For each object look at the array of touching buttons cur.touchArray
+  var calcTouchBombs = function(obj) {
+    var bombsTouching = [];
+    var touch = obj.touchArray;
+    touch.forEach(function(cur) {
+      var test = game.bombIDs.indexOf(cur);
+      if (test !== -1) {
+        bombsTouching.push(cur);
+      }
+    });
+    return bombsTouching;
+  };
+  // For each ID in the array compare it to game.bombIDs
+  //    If it is in game.bombIDs push to array touchingBombs
+  //    If it is not in game.bombIDs do nothing
+  // set cur.touchingBombs to the touchingBombs array just made
+  // get length of touchingBombs and set value to cur.bombCount
 
   /*  Public Functions  */
   return {
@@ -254,24 +259,28 @@ var calcTouchBombs = function(obj){
         genBombLocations();
       },
 
-      updateObjectsBombs: function(){
+      updateObjectsBombs: function() {
         updateObjectsBombs();
       },
 
-      initFlag: function(){
-        game.allIDs.forEach(function(cur){
+      initFlag: function() {
+        game.allIDs.forEach(function(cur) {
           setFlag(cur, false);
-        })
+        });
       },
 
-      calcTouch: function(){
+      calcTouch: function() {
         // run calcTouch() and it will return an array of touching button IDs
-        game.objects.forEach(function(cur){
+        game.objects.forEach(function(cur) {
           cur.touchArray = calcTouch(cur);
         });
       },
 
-      calcTouchBombs: function(){
+      calcTouchBombs: function() {
+        game.objects.forEach(function(cur) {
+          cur.touchBombs = calcTouchBombs(cur);
+          cur.countBombs = cur.touchBombs.length;
+        });
 
       }
     },
@@ -285,27 +294,28 @@ var calcTouchBombs = function(obj){
       // Retreive column/row arrays
       // Can be used to help figure out where on the board a button is and what surrounds it
       getPlainIDs: {
-        getPlainCol: function(){
+        getPlainCol: function() {
           return game.plainIDs.col;
         },
-        getPlainRow: function(){
+        getPlainRow: function() {
           return game.plainIDs.row;
         }
       },
-        //clicked IDs, bombIDs, flagIDs, objects
-      getClickedIDs: function(){
+      //clicked IDs, bombIDs, flagIDs, objects
+      getClickedIDs: function() {
         return game.clickedIDs;
       },
 
       // Comment this out before completing or someone can pull the answers before even attempting
-      getBombIDs: function(){
+      getBombIDs: function() {
         return game.bombIDs;
       },
 
-      getflagIDs: function(){
+      getflagIDs: function() {
         return game.flagIDs;
       },
 
+      // Comment this out before completing or someone can pull the answers before attempting
       getObjects: function() {
         return game.objects;
       }
@@ -313,7 +323,7 @@ var calcTouchBombs = function(obj){
 
     testing: {
 
-      findObj: function(checkID){
+      findObj: function(checkID) {
         var found = findObj(checkID);
         console.log(found);
       },
@@ -340,7 +350,8 @@ var UIController = (function() {
     gameContainer: ".gameContainer", //CSS class holds all game buttons
     gameContainerHTML: "gameContainer", // HTML class holds all game buttons
     gameContainerID: 'field', //HTML ID for gameboard
-    gameButtonHTML: "fieldButton" //HTML class for buttons on the field
+    gameButtonHTML: "fieldButton", //HTML class for buttons on the field
+    gameButtonCSS: ".fieldButton"
   };
 
   /*  Column/Row to ID  */
@@ -485,6 +496,10 @@ var UIController = (function() {
       return allArrays;
     },
 
+    getDomStrings: function() {
+      return domStrings;
+    },
+
     /*  Testing */
     //  Used while making to make sure features were working as I added them
     testing: {
@@ -558,12 +573,72 @@ var MainController = (function(DataController, UIController) {
     DataController.setGame.calcTouchBombs();
   };
 
+  var eventListeners = function() {
+    var domStrings = UIController.getDomStrings();
+    var field = document.getElementById(domStrings.gameContainerID);
+    var buttons = [].slice.call(field.querySelectorAll(domStrings.gameButtonCSS), 0);
+
+    field.addEventListener('click', function(e) {
+      var index = buttons.indexOf(e.target);
+      if (index !== -1) {
+        /*DO STUFF ON LEFT CLICK*/
+        //  ID the clicked object
+        //    use the index found here
+        //    match the index of DataController.game.allIDs
+        //    return the matched ID
+        //    loop through DataController.game.objects
+        //      find the one with the matching ID
+        //      if the flag status is false
+        //        set it to true
+        //      if the flag status is true
+        //        make sure that there are still flags to spare
+        //        set it to false
+
+        console.log('left click: ' + index);
+      }
+    });
+
+    field.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      var index = buttons.indexOf(e.target);
+      if (index !== -1) {
+        /*DO STUFF ON RIGHT CLICK*/
+        //  ID the clicked object
+        //    use the index found here
+        //    match the index of DataController.game.allIDs
+        //    return the matched ID
+        //    loop through DataController.game.objects
+        //      find the one with the matching ID
+        //  ONLY DO EVERYTHING HERE IF OBJ.FLAG == false
+        //  Page should load with a var timerRun = false
+        //    If timerRun is false when this is clicked
+        //      start a timer
+        //    If timerRun is true when this is clicked
+        //      do nothing
+        //  Change the CSS of the clicked object
+        //    set to the shadow color
+        //    set the inside top left shadow color to the light shadow
+        //  ID whether or not isBomb is true or false
+        //    if isBomb is true
+        //      display picture of a bomb
+        //      disable event listeners for clicks (GAME OVER screen? alert?)
+        //    if isBomb is false
+        //      see value of obj.touchBombs
+        //      display value on button
+        //      if value to display is 0
+        //        run DO STUFF ON RIGHT CLICK on all touching objects
+        console.log('right click: ' + index);
+      }
+    });
+  };
+
   /*  Public Functions  */
   return {
     /*  Initialization  */
     //  Runs on page load to prepare game board and set event listeners
     init: function() {
       genGame();
+      eventListeners();
     }
   };
 }(DataController, UIController));

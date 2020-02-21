@@ -81,36 +81,3 @@ Process:
 
 
 SCRATCH:
-
-Main board UI and data ID's are generated
-
-Generate bomb locations
-  Go through idArray and select 10 random items
-  Each time 1 is selected make sure it cannot be reselected
-    Either remove it from the list or check to see if it already exists as a bomb location and if so run it again without adding or increasing counter
-  Save array to game.bombIDs;
-
-
-Generate grid objects
-  Create a new object for each button on the grid
-    Should contain:
-      ID
-      Column Number
-      Row Number
-      A function to calculate which other buttons it's touching
-      An array to store touching buttons
-      A function to calculate if/how many of the touching buttons have bombs
-      An array to store which touching buttons have bombs
-      A boolean for whether or not it has a flag
-      A boolean for whether or not it has a bomb
-
-Create event listener for .gameContainer (field)
-  Identify what kind of click it was (single/double)
-    On single click run flag function
-    On double click run activate function
-  Flag function
-    Add flag icon to button
-    Mark it as a flag in the flag array
-    Disable double click on this button
-  Activate function
-    Change background color to slightly darker

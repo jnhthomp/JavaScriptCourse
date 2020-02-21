@@ -47,6 +47,7 @@ $font: 'Press Start 2P', cursive;
 body{
   background-color: $base-color;
   font: $font;
+  overflow: hidden;
 }
 
 h1{
@@ -128,7 +129,7 @@ button{
   grid-area: resetButton;
   box-shadow: $infoBoxesShadow;
   border-radius: 7px;
-  
+
 }
 
 .timer{
