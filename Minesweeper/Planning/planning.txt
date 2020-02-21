@@ -36,7 +36,7 @@ Main:
 
 Process:
   Page Load:
-    Page will load with 9x9 field of buttons
+    Page will load with 10x10 field of buttons
     There will be a number displayed representing amount of flags
     There will be a timer (starting at 0) that starts when the user clicks (later)
 

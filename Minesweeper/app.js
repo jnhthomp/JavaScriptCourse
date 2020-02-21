@@ -21,7 +21,6 @@ var DataController = (function() {
   /*  Game Object */
   //    Holds game info such as all of the ids, the numbers and rows that exist, which buttons have been clicked, the locations of bombs and where flags have been placed.
   var game = {
-
     allIDs: [], // Will hold all IDs on the gameboard after they are created
     plainIDs: {
       col: [], // Store number of columns as an array
@@ -49,68 +48,9 @@ var DataController = (function() {
     // this.touching = touching;
     // this.touchingBombs = touchingBombs;
     // this.flag = flag;
-    // this.bomb = bomb;
+    // this.bombCount = bomb;
   };
 
-  // Prototype for GridButton so all instances have access to their own copy
-  // Will calculate the ID's of other buttons that it is touching
-  // Stores the result into this.touching
-  GridButton.prototype.findTouching = function() {
-    var tlc, tlr, /**/ tmc, tmr, /**/ trc, trr,
-      mlc, mlr, /**This button**/ mrc, mrr,
-      blc, blr, /**/ bmc, bmr, /**/ brc, brr;
-    // Find top left
-    tlc = (this.column - 1);
-    tlr = (this.row - 1);
-    findTouchingCalc(tlc, tlr);
-    // Find top middle
-    tmc = (this.column);
-    tmr = (this.row - 1);
-    findTouchingCalc(tmc, tmr);
-    // Find top right
-    trc = (this.column + 1);
-    trr = (this.row - 1);
-    findTouchingCalc(trc, trr);
-    // Find middle left
-    mlc = (this.column - 1);
-    mlr = (this.row);
-    findTouchingCalc(mlc, mlr);
-    // Find middle right
-    mrc = (this.column + 1);
-    mrr = (this.row);
-    findTouchingCalc(mrc, mrr);
-    // Find bottom left
-    blc = (this.column - 1);
-    blr = (this.row + 1);
-    findTouchingCalc(blc, blr);
-    // Find bottom middle
-    bmc = (this.column);
-    bmr = (this.row + 1);
-    findTouchingCalc(bmc, bmr);
-    // Find bottom right
-    brc = (this.colum + 1);
-    brr = (this.row + 1);
-    findTouchingCalc(brc, brr);
-    /*1,1 2,1 3,1
-      1,2 2,2 3,2
-      1,3 2,3 3,3
-    */
-    var findTouchingCalc = function(checkColumn, checkRow) {
-      var c, r, id;
-      if (checkColumn < 0 || checkColumn > game.plainIDs.col.length - 1) {
-        c = -1;
-      } else {
-        c = checkColumn;
-      }
-      if (checkRow < 0 || checkRow > game.plainIDs.row.length - 1) {
-        r = -1;
-      } else {
-        r = checkRow;
-      }
-      id = 'c' + c + 'r' + r;
-      this.touching.push(id);
-    };
-  };
   // Create the new object and add it to an array
   var createGameObjects = function() {
     var col = 0;
@@ -143,7 +83,6 @@ var DataController = (function() {
       if (tempBombArray.indexOf(bombID) == -1) {
         // If not then add it and increase counter
         tempBombArray.push(bombID);
-        console.log(tempBombArray);
         i++;
       } else {
         //console.log('Duplicate found tossing');
@@ -151,8 +90,147 @@ var DataController = (function() {
     }
     // Save array to game.bombIDs;
     game.bombIDs = tempBombArray;
-    console.log(game.bombIDs);
+    // console.log(game.bombIDs); ANSWER KEY!
   };
+
+  var updateObjectsBombs = function(){
+    // Cycle through each object in game.objects
+    game.objects.forEach(function(cur){
+      // See if the ID of the current object is in bombIDs
+      // Create a new attribute for the object called isBomb
+      //  If it is in bombIDs then assign 'true' to that object
+      if(game.bombIDs.indexOf(cur.id) == -1){
+        cur.isBomb = false;
+      }//  If not a bomb assign 'false' to that object
+      else{
+        cur.isBomb = true;
+      }
+    });
+
+  };
+
+  var setFlag = function(id, bool){
+    // Set state of flag in game.objects w/ matching ID
+    // Keep game.flagIDs up to date
+    var obj = findObj(id);
+    // console.log(obj);
+    if(bool == true){
+      obj.flag = true;
+      //console.log(obj);
+    } else{
+      obj.flag = false;
+      //console.log(obj);
+    };
+  };
+
+  // Find the object in game.objects with a matching ID
+  var findObj = function(checkid){
+    var found;
+    game.objects.forEach(function(cur){
+      if(cur.id === checkid){
+        found = cur;
+      }
+    });
+
+    return found;
+  };
+
+var calcTouch = function(obj){
+  var tlc, tlr, /**/ tmc, tmr, /**/ trc, trr,
+    mlc, mlr, /**This button**/ mrc, mrr,
+    blc, blr, /**/ bmc, bmr, /**/ brc, brr,
+    topLeft, topMiddle, topRight,
+    middleLeft, /*this*/ middleRight,
+    bottomLeft, bottomMiddle, bottomRight;
+
+  var checkArray = [];
+  var touchArray = [];
+
+  // Get column and row of given button
+  var col = obj.column;
+  var row = obj.row;
+
+  // Calc columns and rows for the 8 buttons that would be touching
+    /*1,1 2,1 3,1
+      1,2 2,2 3,2
+      1,3 2,3 3,3
+    */
+  // Find top left
+  tlc = (col - 1);
+  tlr = (row - 1);
+  topLeft = 'c' + tlc + 'r' + tlr;
+  checkArray.push(topLeft);
+
+  // Find top middle
+  tmc = (col);
+  tmr = (row - 1);
+  topMiddle = 'c' + tmc + 'r' + tmr;
+  checkArray.push(topMiddle);
+
+  // Find top right
+  trc = (col + 1);
+  trr = (row - 1);
+  topRight = 'c' + trc + 'r' + trr;
+  checkArray.push(topRight);
+
+  // Find middle left
+  mlc = (col - 1);
+  mlr = (row);
+  middleLeft = 'c' + mlc + 'r' + mlr;
+  checkArray.push(middleLeft);
+
+  // Find middle right
+  mrc = (col + 1);
+  mrr = (row);
+  middleRight = 'c' + mrc + 'r' + mrr;
+  checkArray.push(middleRight);
+
+  // Find bottom left
+  blc = (col - 1);
+  blr = (row + 1);
+  bottomLeft = 'c' + blc + 'r' + blr;
+  checkArray.push(bottomLeft);
+
+  // Find bottom middle
+  bmc = (col);
+  bmr = (row + 1);
+  bottomMiddle = 'c' + bmc + 'r' + bmr;
+  checkArray.push(bottomMiddle);
+
+  // Find bottom right
+  brc = (col + 1);
+  brr = (row + 1);
+  bottomRight = 'c' + brc + 'r' + brr;
+  checkArray.push(bottomRight);
+
+
+  // See if that ID is listed in all IDs to double check that it is valid
+  checkArray.forEach(function(cur){
+    // Find if ID is in game.allIDs
+    if(game.allIDs.indexOf(cur) !== -1){
+      touchArray.push(cur);
+    };
+  });
+  // If not valid do nothing and move on to the next
+  // If it is valid add it to an array inside the current object called touching
+  console.log(touchArray);
+  return touchArray;
+};
+
+// Look through game.objects
+// For each object look at the array of touching buttons cur.touchArray
+var calcTouchBombs = function(obj){
+  touch = obj.touchArray
+  touch.forEach(function(cur){
+    game.bombIDs.indexOf(cur)
+  });
+}
+// For each ID in the array compare it to game.bombIDs
+//    If it is in game.bombIDs push to array touchingBombs
+//    If it is not in game.bombIDs do nothing
+// set cur.touchingBombs to the touchingBombs array just made
+// get length of touchingBombs and set value to cur.bombCount
+
   /*  Public Functions  */
   return {
     /*  setGame */
@@ -166,6 +244,35 @@ var DataController = (function() {
       setPlainIDs: function(col, row) {
         game.plainIDs.col = col;
         game.plainIDs.row = row;
+      },
+
+      createGameObjects: function() {
+        createGameObjects();
+      },
+
+      genBombLocations: function() {
+        genBombLocations();
+      },
+
+      updateObjectsBombs: function(){
+        updateObjectsBombs();
+      },
+
+      initFlag: function(){
+        game.allIDs.forEach(function(cur){
+          setFlag(cur, false);
+        })
+      },
+
+      calcTouch: function(){
+        // run calcTouch() and it will return an array of touching button IDs
+        game.objects.forEach(function(cur){
+          cur.touchArray = calcTouch(cur);
+        });
+      },
+
+      calcTouchBombs: function(){
+
       }
     },
     /*  getGame  */
@@ -177,8 +284,26 @@ var DataController = (function() {
       },
       // Retreive column/row arrays
       // Can be used to help figure out where on the board a button is and what surrounds it
-      getPlainIDs: function() {
-        return game.plainIDs;
+      getPlainIDs: {
+        getPlainCol: function(){
+          return game.plainIDs.col;
+        },
+        getPlainRow: function(){
+          return game.plainIDs.row;
+        }
+      },
+        //clicked IDs, bombIDs, flagIDs, objects
+      getClickedIDs: function(){
+        return game.clickedIDs;
+      },
+
+      // Comment this out before completing or someone can pull the answers before even attempting
+      getBombIDs: function(){
+        return game.bombIDs;
+      },
+
+      getflagIDs: function(){
+        return game.flagIDs;
       },
 
       getObjects: function() {
@@ -187,13 +312,13 @@ var DataController = (function() {
     },
 
     testing: {
-      genBombLocations: function() {
-        genBombLocations();
+
+      findObj: function(checkID){
+        var found = findObj(checkID);
+        console.log(found);
       },
 
-      createGameObjects: function() {
-        createGameObjects();
-      }
+
     }
 
   };
@@ -229,13 +354,13 @@ var UIController = (function() {
     // Empty array to add combinations we find to
     combosIDArray = [];
 
-    // Go through first item in columnsArray
-    //  Go through first item in rowsArray
+    // Go through first item in rowsArray
+    //  Go through first item in columnsArray
     //    Combine to create ID and add to end of array
-    //  Go to second item in rows array
+    //  Go to second item in columns array
     //    same as above
-    //  Repeat all the way through rows array
-    // Go through second item in columns array etc...
+    //  Repeat all the way through columns array
+    // Go through second item in rows array etc...
     rowsArray.forEach(function(r) {
       columnsArray.forEach(function(c) {
         id = 'c' + c + 'r' + r;
@@ -408,12 +533,29 @@ var MainController = (function(DataController, UIController) {
     //  2.  Generate HTML (and CSS) based on board size
     var allArrays = UIController.genGrid(columns, rows);
 
-    // 2.5 update plainIDs
+    //  3. update plainIDs
     DataController.setGame.setPlainIDs(allArrays.columnsArray, allArrays.rowsArray);
 
-    //  3.  Pass list of ID's to DataController
-    //        Data controller will create bomb locations after first button     clicked
+    //  4.  Pass list of ID's to DataController
     DataController.setGame.setAllIDs(allArrays.idArray);
+
+    //  5. Create objects for each button
+    DataController.setGame.createGameObjects();
+
+    //  6. set initial flag values for created objects to false
+    DataController.setGame.initFlag();
+
+    // 7. Generate bomb Locations
+    DataController.setGame.genBombLocations();
+
+    // 8. set bomb status on all objects
+    DataController.setGame.updateObjectsBombs();
+
+    // 9. Calculate list of touching button IDs for all buttons
+    DataController.setGame.calcTouch();
+
+    // 10. Find touching buttons with bombs
+    DataController.setGame.calcTouchBombs();
   };
 
   /*  Public Functions  */
