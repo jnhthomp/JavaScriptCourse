@@ -291,6 +291,9 @@ var DataController = (function() {
       getAllIDs: function() {
         return game.allIDs;
       },
+      getID: function(index){
+        return game.objects[index];
+      },
       // Retreive column/row arrays
       // Can be used to help figure out where on the board a button is and what surrounds it
       getPlainIDs: {
@@ -318,6 +321,26 @@ var DataController = (function() {
       // Comment this out before completing or someone can pull the answers before attempting
       getObjects: function() {
         return game.objects;
+      }
+    },
+
+    rightClick: function(index) {
+      var obj = game.objects[index];//  ONLY DO EVERYTHING HERE IF OBJ.FLAG == false
+      //  ID whether or not isBomb is true or false
+      //    if isBomb is true
+      //      display picture of a bomb
+      //      disable event listeners for clicks (GAME OVER screen? alert?)
+      //    if isBomb is false
+      //      see value of obj.touchBombs
+      //      display value on button
+
+      if(obj.flag == false){
+        if(obj.isBomb == true){
+          // return that this is a bomb
+          return true;
+        } else{
+          return obj.countBombs;
+        }
       }
     },
 
@@ -600,34 +623,22 @@ var MainController = (function(DataController, UIController) {
 
     field.addEventListener('contextmenu', function(e) {
       e.preventDefault();
+      var received;
       var index = buttons.indexOf(e.target);
       if (index !== -1) {
         /*DO STUFF ON RIGHT CLICK*/
         //  ID the clicked object
         //    use the index found here
-        //    match the index of DataController.game.allIDs
-        //    return the matched ID
-        //    loop through DataController.game.objects
-        //      find the one with the matching ID
-        //  ONLY DO EVERYTHING HERE IF OBJ.FLAG == false
-        //  Page should load with a var timerRun = false
-        //    If timerRun is false when this is clicked
-        //      start a timer
-        //    If timerRun is true when this is clicked
-        //      do nothing
-        //  Change the CSS of the clicked object
-        //    set to the shadow color
-        //    set the inside top left shadow color to the light shadow
-        //  ID whether or not isBomb is true or false
-        //    if isBomb is true
-        //      display picture of a bomb
-        //      disable event listeners for clicks (GAME OVER screen? alert?)
-        //    if isBomb is false
-        //      see value of obj.touchBombs
-        //      display value on button
-        //      if value to display is 0
-        //        run DO STUFF ON RIGHT CLICK on all touching objects
         console.log('right click: ' + index);
+        //    match the index of DataController.game.allIDs
+        var id = DataController.getGame.getID(index);
+        console.log(id);
+        received = DataController.rightClick(index);
+        if(received == true){
+          // show picture of bomb on button
+        }
+
+
       }
     });
   };
