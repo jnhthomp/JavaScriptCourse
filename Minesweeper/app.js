@@ -52,32 +52,65 @@ var DataController = (function() {
     // this.bombCount = bomb;
   };
 
-  // Create the new object and add it to an array
+  //  Create the new object to track information for each button
+  //  Adds to an array to be stored and accessed
   var createGameObjects = function() {
+    //  first item created will have a column and row values of 0
     var col = 0;
     var row = 0;
+    //  Loop through the list of IDs
     game.allIDs.forEach(function(cur) {
+      //  for every id create a new object
+      //  pass the current id, column and row values into it.
       newItem = new GridButton(cur, col, row);
+      //  add the created object to an array holding all objects
       game.objects.push(newItem);
+      //  increase the column count
       col++;
+      //  When column value gets bigger than the length of columns
       if (col >= game.plainIDs.col.length) {
+        //  Reset column to 0 and repeat the above with row increased
         col = 0;
         row++;
       }
+      //  Doing it this way as compared to extracting column and row from ID means it may be easier to change ID values in the future.
     });
   };
 
-  // Generate bomb locations
-  var genBombLocations = function() {
-    // Go through idArray and select 10 random items
-    var i = 1;
-    var idsArray = game.allIDs;
-    var tempBombArray = [];
-    while (i <= (idsArray.length * 0.1)) {
-      // Generate a random number to use as an index of the array
-      //   0 - Array.length - 1
-      var randomIndex = Math.floor(Math.random() * Math.floor(idsArray.length - 1));
 
+  //  Sets an initial flag value of false on a given object
+  var setFlag = function(id) {
+    // Set state of flag in game.objects w/ matching ID
+    // Keep game.flagIDs up to date
+    var obj = findObj(id); // Finds object with matching ID
+    obj.flag = false; //  Creates and sets the objects flag value to false
+
+  };
+
+  //  Find an object with a given ID in game.objects array
+  var findObj = function(checkid) {
+    var found; // How the object will be accessed
+    //  Loop through the game.objects array
+    game.objects.forEach(function(cur) {
+      // Check if the current object in array matches the ID being looked for
+      if (cur.id === checkid) { //  If it does match
+        found = cur; // Save the matched object to found variable
+      }
+    });
+    //  Return the matched object
+    return found;
+  };
+
+  // Generate array of random IDs from game.allIDs to be bomb locations
+  var genBombLocations = function() {
+    //  Go through idArray and select 10% random items
+    //  Increase this percentage for denser bomb layout
+    var i = 1; // Counter for while loop
+    var idsArray = game.allIDs; // main id array
+    var tempBombArray = []; // this will be the IDs of bomb locations are added
+    while (i <= (idsArray.length * 0.1)) { // Do this for 10% of total IDs
+      // Generate a random number to use as an index of the array
+      var randomIndex = Math.floor(Math.random() * Math.floor(idsArray.length - 1));
       // Save the id at the generated index
       var bombID = idsArray[randomIndex];
       // Check that the id is not in the array already before adding
@@ -85,16 +118,18 @@ var DataController = (function() {
         // If not then add it and increase counter
         tempBombArray.push(bombID);
         i++;
-      } else {
-        //console.log('Duplicate found tossing');
       }
+      //  If it is in temp array don't increase counter or add so it is redone
     }
-    // Save array to game.bombIDs;
+    //  After generating all needed bomb IDs and adding to tempArray
+    //  Save array to game.bombIDs;
     game.bombIDs = tempBombArray;
+    //  Set the number of available flags equal to number of bombs placed
     game.flagCount = tempBombArray.length;
     // console.log(game.bombIDs); ANSWER KEY!
   };
 
+  //  Updates each object with whether or not it is a bomb
   var updateObjectsBombs = function() {
     // Cycle through each object in game.objects
     game.objects.forEach(function(cur) {
@@ -111,47 +146,27 @@ var DataController = (function() {
 
   };
 
-  var setFlag = function(id, bool) {
-    // Set state of flag in game.objects w/ matching ID
-    // Keep game.flagIDs up to date
-    var obj = findObj(id);
-    // console.log(obj);
-    if (bool == true) {
-      obj.flag = true;
-      //console.log(obj);
-    } else {
-      obj.flag = false;
-      //console.log(obj);
-    }
-  };
-
-  // Find the object in game.objects with a matching ID
-  var findObj = function(checkid) {
-    var found;
-    game.objects.forEach(function(cur) {
-      if (cur.id === checkid) {
-        found = cur;
-      }
-    });
-
-    return found;
-  };
-
+  //  Returns an array of objects that are touching a given object
   var calcTouch = function(obj) {
+    // column and row number to be used to gen ID
     var tlc, tlr, /**/ tmc, tmr, /**/ trc, trr,
       mlc, mlr, /**This button**/ mrc, mrr,
-      blc, blr, /**/ bmc, bmr, /**/ brc, brr,
-      topLeft, topMiddle, topRight,
+      blc, blr, /**/ bmc, bmr, /**/ brc, brr;
+
+    // IDs of possible touching buttons
+    var topLeft, topMiddle, topRight,
       middleLeft, /*this*/ middleRight,
       bottomLeft, bottomMiddle, bottomRight;
 
-    var checkArray = [];
-    var touchArray = [];
+    var checkArray = []; // Will be used to check for invalid IDs
+    var touchArray = []; // Will only store valid IDs
 
     // Get column and row of given button
     var col = obj.column;
     var row = obj.row;
 
+    // TODO: Make this a loop instead of individual actions
+    //  Try a column loop inside of row loop
     // Calc columns and rows for the 8 buttons that would be touching
     /*1,1 2,1 3,1
       1,2 2,2 3,2
@@ -210,69 +225,84 @@ var DataController = (function() {
     checkArray.forEach(function(cur) {
       // Find if ID is in game.allIDs
       if (game.allIDs.indexOf(cur) !== -1) {
-        touchArray.push(cur);
+        touchArray.push(cur); // If it is valid add it to the touch array
       }
     });
     // If not valid do nothing and move on to the next
     // If it is valid add it to an array inside the current object called touching
     //console.log(touchArray);
-    return touchArray;
+    return touchArray; // Return the array of valid touching IDs
   };
 
-  // Look through game.objects
-  // For each object look at the array of touching buttons cur.touchArray
+
+  //  Look at the given object and see if it is touching any bombs
   var calcTouchBombs = function(obj) {
+    //  initialize array to store touching bomb IDs
     var bombsTouching = [];
+    //  look at the objects array of touching IDs
     var touch = obj.touchArray;
+    //  For every touching ID
     touch.forEach(function(cur) {
+      //  Get the index of the matching current ID in bombs array
+      //  If it is not in the array test will be -1
+      //  If it is in the array it will have an index
       var test = game.bombIDs.indexOf(cur);
-      if (test !== -1) {
+      if (test !== -1) { // If it is not -1 (has a valid index)
+        // add to empty bombs touching array
         bombsTouching.push(cur);
       }
     });
+    // After looping through all touching IDs return the bombs touching array
     return bombsTouching;
   };
-  // For each ID in the array compare it to game.bombIDs
-  //    If it is in game.bombIDs push to array touchingBombs
-  //    If it is not in game.bombIDs do nothing
-  // set cur.touchingBombs to the touchingBombs array just made
-  // get length of touchingBombs and set value to cur.bombCount
+
 
   /*  Public Functions  */
   return {
+    //  Initialize all needed info, arrays, and objects for data controller
     dataInit: function(columnsArray, rowsArray, idArray) {
+      //  Set the value for arrays
+      //  columns/rowsArray is used for some looping actions
       game.plainIDs.col = columnsArray;
       game.plainIDs.row = rowsArray;
+      //  Full list of all IDs
       game.allIDs = idArray;
 
+      //  Create an object for each game button
+      //  Holds important information relative to that object
       createGameObjects();
 
+      // Loop to set inital flag values on all created objects
+      // Will be set to false since none have been clicked yet
       game.allIDs.forEach(function(cur) {
         setFlag(cur, false);
       });
 
+      //  Generates a list of random IDs to be bombs
+      //  Sets flags available to be equal to number of bombs
       genBombLocations();
 
+      //  Update objects with whether or not they are a bomb
       updateObjectsBombs();
 
+      //  Update objects with array of other touching object IDs
+      //  Loop through each object in object array
       game.objects.forEach(function(cur) {
+        //  Run calcTouch on the current object
+        //  Assign the returned array to the current objects touchArray
         cur.touchArray = calcTouch(cur);
       });
 
+      // Updates objects with an array of bomb IDs and number it is touching
       game.objects.forEach(function(cur) {
+        //  Creates touchBombs property in current array
+        //  Sets value to returned array from calctouchBombs
         cur.touchBombs = calcTouchBombs(cur);
+        //  Uses length of the objects touchBombs array to get number of bombs
         cur.countBombs = cur.touchBombs.length;
       });
     },
-    /*  setGame */
-    //  Set properties of the game object
-    setGame: {
 
-      calcTouchBombs: function() {
-
-
-      }
-    },
     /*  getGame  */
     //  Retrieve values stored in the game object
     getGame: {
@@ -303,10 +333,8 @@ var DataController = (function() {
         return game.bombIDs;
       },
 
-      getFlagIDs: function() {
-        return game.flagIDs;
-      },
 
+      // Used to see how many flags are still available
       getFlagCount: function() {
         return game.flagCount;
       },
@@ -330,7 +358,7 @@ var DataController = (function() {
       if (obj.flag == false) {
         if (obj.isBomb == true) {
           // return that this is a bomb
-          return true;
+          return -1;
         } else {
           return obj.countBombs;
         }
@@ -634,27 +662,41 @@ var MainController = (function(DataController, UIController) {
     DataController.dataInit(allArrays.columnsArray, allArrays.rowsArray, allArrays.idArray);
   };
 
+  // Set up clickable items
   var eventListeners = function() {
+    //  Store domStrings for use later
     var domStrings = UIController.getDomStrings();
+    //  Access the gameContainer
     var field = document.getElementById(domStrings.gameContainerID);
+    //  Creates an array of all gameButtons
     var buttons = [].slice.call(field.querySelectorAll(domStrings.gameButtonCSS), 0);
 
+
+    //  Left click actions
     field.addEventListener('click', function(e) {
+      //  Only allow these left click actions if the game is still running
+      //  Game is still running when gameOver is false
       if (!gameOver) {
+        //  Save the access the current number of flags
         var flagCount = DataController.getGame.getFlagCount();
+        //  Index of the clicked item in buttons array
         var index = buttons.indexOf(e.target);
-        if (index !== -1) {
+        if (index !== -1) { // If the clicked item is in buttons array
           /*DO STUFF ON LEFT CLICK*/
-          //  ID the clicked object
+          //  ID the clicked object w/ index
           //    use the index found here
-          console.log('left click: ' + index);
           //    match the index of DataController.game.allIDs
+          //    this way we don't have to give access to the object
           var id = DataController.getGame.getID(index);
-          console.log(id);
+
+          //  Update css on clicked button
+          //    set flag picture
           e.target.style.backgroundImage = "url('Photos/flag.png')";
+          //    Set the picture not repeat and be centered
           e.target.style.backgroundRepeat = "no-repeat";
           e.target.style.backgroundPosition = "center";
-          //    return the matched ID
+
+          // TODO: flag stuff
           //    loop through DataController.game.objects
           //      find the one with the matching ID
           //      if the flag status is false
@@ -668,37 +710,44 @@ var MainController = (function(DataController, UIController) {
       }
     });
 
+    // Right click actions
     field.addEventListener('contextmenu', function(e) {
+      //  Prevent the right click menu from opening
       e.preventDefault();
+      //  Only allow these right click actions if the game is still running
+      //  Game is still running when gameOver is false
       if (!gameOver) {
         var received;
+        //  Get index of clicked item in buttons array
         var index = buttons.indexOf(e.target);
-        if (index !== -1) {
+        if (index !== -1) { // If the clicked item is in buttons array
           /*DO STUFF ON RIGHT CLICK*/
           //  ID the clicked object
           //    use the index found here
-          console.log('right click: ' + index);
           //    match the index of DataController.game.allIDs
+          //    this way we don't have to give access to the object
           var id = DataController.getGame.getID(index);
-          console.log(id);
+
+          //  Update background color CSS
           e.target.style.background = "#2c2c2c";
+          //  Received represents what was "dug up"
+          //  If -1 then a bomb was dug up
+          //  If a number then that is how many bombs it is touching
           received = DataController.rightClick(index);
-          if (received === true) {
-            // Show picture of bomb on button
+          if (received === -1) {
+            //  Update CSS if there is a bomb
+            //    Show picture of bomb on button
+            //    Set the picture to not repeat and be centered
             e.target.style.backgroundImage = "url('Photos/bomb.png')";
             e.target.style.backgroundRepeat = "no-repeat";
             e.target.style.backgroundPosition = "center";
-            console.log(gameOver);
+
+            //  Set gameOver to true when bomb is activated (disables clicks)
             gameOver = true;
-            console.log(received);
-            console.log(gameOver);
-            // Disable clicks
-          } else {
-            // update the button value to show received #
+          } else if (received > -1) { // If not a bomb it will receive a pos int
+            // update button value to show received # (number of bombs touching)
             e.target.innerHTML = received;
           }
-
-
         }
       }
     });
@@ -710,8 +759,9 @@ var MainController = (function(DataController, UIController) {
     //  Runs on page load to prepare game board and set event listeners
     init: function() {
       gameOver = false; // Game only runs when false
-
+      // Set up UIController and DataController for game
       genGame();
+      // Set up clickable buttons
       eventListeners();
     }
   };
@@ -719,7 +769,3 @@ var MainController = (function(DataController, UIController) {
 
 // Initialize the page
 MainController.init();
-
-
-
-/*CLEAN UP DATA INIT*/
