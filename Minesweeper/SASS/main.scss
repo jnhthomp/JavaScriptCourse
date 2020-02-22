@@ -14,7 +14,6 @@ How to:
 */
 
 
-
 /************************
  *      Color List      *
  ************************/
@@ -171,6 +170,9 @@ button{
   box-shadow: $infoBoxesShadow;
   border: none;
   margin: 5px;
+  font-family: $font;
+  color: $base-color;
+  font-size: 1.75em;
 }
 
 //TESTING ONLY DELETE LATER: WILL BE GENERATED

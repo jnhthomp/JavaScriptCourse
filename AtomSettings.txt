@@ -19,6 +19,7 @@ Atom Packages:
   pdf-view
   pigments
   title-bar-replacer
+    run remove default window
   todo
 
 UI Theme: Atom Material
