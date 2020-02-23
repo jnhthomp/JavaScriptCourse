@@ -303,6 +303,33 @@ var DataController = (function() {
       });
     },
 
+    setGame: {
+      toggleFlag: function(index) {
+        //  Receives an ID
+        //  Checks flag status in the object
+        var flagStatus = game.objects[index].flag;
+
+        //  If flag status true
+        if (game.objects[index].flag) {
+          //    set flag status false
+          game.objects[index].flag = false;
+          //    return flag status
+          game.flagCount++; //  Readd to available flags
+          return game.objects[index].flag;
+        }
+
+        //  If flag status false
+        if (!game.objects[index].flag) {
+          //    set flag status true
+          game.objects[index].flag = true;
+          //    return flag status
+          game.flagCount--; //  Subtract from available flags
+          return game.objects[index].flag;
+        }
+
+      }
+    },
+
     /*  getGame  */
     //  Retrieve values stored in the game object
     getGame: {
@@ -362,6 +389,8 @@ var DataController = (function() {
         } else {
           return obj.countBombs;
         }
+      } else if (obj.flag == true) {
+        return -2;
       }
     },
 
@@ -391,11 +420,16 @@ var UIController = (function() {
   /*  DOM Strings */
   //  Holds DOM strings from HTML so we can manipulate them later
   var domStrings = {
+    infoContainer: "infoContainer",
+    reset: "reset",
     gameContainer: ".gameContainer", //CSS class holds all game buttons
     gameContainerHTML: "gameContainer", // HTML class holds all game buttons
     gameContainerID: 'field', //HTML ID for gameboard
     gameButtonHTML: "fieldButton", //HTML class for buttons on the field
-    gameButtonCSS: ".fieldButton"
+    gameButtonCSS: ".fieldButton",
+    flagCount: "flagCount",
+    timerMin: "m",
+    timerSec: "s"
   };
 
   /*  Column/Row to ID  */
@@ -587,6 +621,45 @@ var UIController = (function() {
       return domStrings;
     },
 
+    toggleFlag: function(target, flagStatus) {
+
+      if (flagStatus) {
+        // left click. Flag toggle on
+        //  Update css on clicked button
+        //    set flag picture
+        target.style.backgroundImage = "url('Photos/flag.png')";
+        //    Set the picture not repeat and be centered
+        target.style.backgroundRepeat = "no-repeat";
+        target.style.backgroundPosition = "center";
+      } else if (!flagStatus) {
+        // left click. Flag toggle off
+        // Remove picture from css background
+        target.style.backgroundImage = "url('')";
+      }
+    },
+
+    updateFlagCount: function(flagCount) {
+      document.getElementById(domStrings.flagCount).innerHTML = flagCount;
+    },
+
+    activateButton: function(target, received) {
+      if (received === -1) {
+        //  Update background color CSS
+        target.style.background = "#2c2c2c";
+        //  Update CSS if there is a bomb
+        //    Show picture of bomb on button
+        //    Set the picture to not repeat and be centered
+        target.style.backgroundImage = "url('Photos/bomb.png')";
+        target.style.backgroundRepeat = "no-repeat";
+        target.style.backgroundPosition = "center";
+
+      } else if (received > -1) { // If not a bomb it will receive a pos int
+        // update button value to show received # (number of bombs touching)
+        target.innerHTML = received;
+        //  Update background color CSS
+        target.style.background = "#2c2c2c";
+      }
+    },
     /*  Testing */
     //  Used while making to make sure features were working as I added them
     testing: {
@@ -629,6 +702,7 @@ var MainController = (function(DataController, UIController) {
   //  On page load this will start as false
   //  When a bomb is clicked it becomes true
   var gameOver;
+  var timer;
 
   /*  Generate Gameboard  */
   //  Assembles the gameboard
@@ -671,6 +745,22 @@ var MainController = (function(DataController, UIController) {
     //  Creates an array of all gameButtons
     var buttons = [].slice.call(field.querySelectorAll(domStrings.gameButtonCSS), 0);
 
+    var infoBox = document.getElementById(domStrings.reset);
+
+    infoBox.addEventListener('click', function() {
+      // RESET DO STUFF
+      //  Set gameOver to false
+      //  Set timer to false
+      // 1. UI Stuff
+      //      Delete all html items from DOM
+      //      Delete current timer value and Date object
+      //
+      // 2. Data Stuff
+      //    Delete all game data
+      //      Including all arrays and delete all objects in game.objects
+      // 3. Rerun init()
+    });
+
 
     //  Left click actions
     field.addEventListener('click', function(e) {
@@ -689,12 +779,6 @@ var MainController = (function(DataController, UIController) {
           //    this way we don't have to give access to the object
           var id = DataController.getGame.getID(index);
 
-          //  Update css on clicked button
-          //    set flag picture
-          e.target.style.backgroundImage = "url('Photos/flag.png')";
-          //    Set the picture not repeat and be centered
-          e.target.style.backgroundRepeat = "no-repeat";
-          e.target.style.backgroundPosition = "center";
 
           // TODO: flag stuff
           //    loop through DataController.game.objects
@@ -704,6 +788,13 @@ var MainController = (function(DataController, UIController) {
           //      if the flag status is true
           //        make sure that there are still flags to spare
           //        set it to false
+          var flagStatus = DataController.setGame.toggleFlag(index);
+          flagCount = DataController.getGame.getFlagCount();
+
+          //  Update flag count in the UI
+          UIController.updateFlagCount(flagCount);
+          //  Toggle flag image on button
+          UIController.toggleFlag(e.target, flagStatus);
 
 
         }
@@ -714,6 +805,27 @@ var MainController = (function(DataController, UIController) {
     field.addEventListener('contextmenu', function(e) {
       //  Prevent the right click menu from opening
       e.preventDefault();
+      //
+      // Start timer if timer has not started yet
+      if (!timer) {
+        // Create a new date object to hold timer variables
+        d = new Date();
+        // Set initial minutes and seconds values to 0
+        d.setMinutes(0);
+        d.setSeconds(0, 0);
+
+        // Start an interval, this will repeat every 1000 ms (1 second)
+        setInterval(function() {
+          // Create a string to display time
+          // Adds a leading 0 and shows 2 smallest place digits (will probably break if over 99:59) put a : in between minutes and seconds
+          var time = ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
+          //  Update UI with timer value
+          document.getElementById(domStrings.timerMin).innerHTML = time;
+          // Increase the values by 1 second
+          d.setTime(d.getTime() + 1000);
+        }, 1000); // Wait 1 second to repeat
+        timer = true; // Set timer to true so it doesn't restart
+      }
       //  Only allow these right click actions if the game is still running
       //  Game is still running when gameOver is false
       if (!gameOver) {
@@ -728,25 +840,20 @@ var MainController = (function(DataController, UIController) {
           //    this way we don't have to give access to the object
           var id = DataController.getGame.getID(index);
 
-          //  Update background color CSS
-          e.target.style.background = "#2c2c2c";
+
           //  Received represents what was "dug up"
           //  If -1 then a bomb was dug up
           //  If a number then that is how many bombs it is touching
+          //  If -2 then a flag was clicked and nothing should happen
           received = DataController.rightClick(index);
+          UIController.activateButton(e.target, received);
           if (received === -1) {
-            //  Update CSS if there is a bomb
-            //    Show picture of bomb on button
-            //    Set the picture to not repeat and be centered
-            e.target.style.backgroundImage = "url('Photos/bomb.png')";
-            e.target.style.backgroundRepeat = "no-repeat";
-            e.target.style.backgroundPosition = "center";
-
             //  Set gameOver to true when bomb is activated (disables clicks)
             gameOver = true;
-          } else if (received > -1) { // If not a bomb it will receive a pos int
-            // update button value to show received # (number of bombs touching)
-            e.target.innerHTML = received;
+            // TODO: show other bomb locations
+          }
+          if (received === -2) {
+            console.log("flagged. nothing happened");
           }
         }
       }
@@ -759,6 +866,7 @@ var MainController = (function(DataController, UIController) {
     //  Runs on page load to prepare game board and set event listeners
     init: function() {
       gameOver = false; // Game only runs when false
+      timer = false;
       // Set up UIController and DataController for game
       genGame();
       // Set up clickable buttons
@@ -769,3 +877,5 @@ var MainController = (function(DataController, UIController) {
 
 // Initialize the page
 MainController.init();
+
+/*Next cleanup starts with event listeners*/

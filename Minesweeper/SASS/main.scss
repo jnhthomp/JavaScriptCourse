@@ -142,6 +142,13 @@ button{
   padding-top: 23%;
 }
 
+#m{
+  float: left;
+  height: 100%;
+  margin-left: 15px;
+}
+
+
 .blankInfoRight{
   grid-area: blankInfoRight;
 }
@@ -218,4 +225,15 @@ button{
   font-size: 6em;
   text-align: center;
   width: 100%;
+}
+
+#reset{
+
+}
+#resetImg{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+  padding-top: 12%;
 }
