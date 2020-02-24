@@ -38,6 +38,7 @@ var DataController = (function() {
     objects: []
   };
 
+
   // Object for each grid button in the game
   // Will hold important information regarding it and the buttons around it
   // These functions will run when it is generated
@@ -394,6 +395,17 @@ var DataController = (function() {
       }
     },
 
+    dataReset: function() {
+      //    Delete all game data
+      game.allIDs = [];
+      game.plainIDs.col = [];
+      game.plainIDs.ros = [];
+      game.clickedIDs = [];
+      game.bombIDs = [];
+      game.flagIDs = [];
+      game.objects = [];
+    },
+
     testing: {
 
       findObj: function(checkID) {
@@ -660,6 +672,17 @@ var UIController = (function() {
         target.style.background = "#2c2c2c";
       }
     },
+
+    uiReset: function(idArray) {
+      // 1. UI Stuff
+      //      Delete all html items from DOM
+      idArray.forEach(function(cur) {
+        document.getElementById(cur).remove();
+      });
+
+      //      Delete current timer value and Date object
+    },
+
     /*  Testing */
     //  Used while making to make sure features were working as I added them
     testing: {
@@ -738,7 +761,8 @@ var MainController = (function(DataController, UIController) {
 
   // Set up clickable items
   var eventListeners = function() {
-    //  Store domStrings for use later
+    var i;
+    //  Store domStrings to defien clickable areas
     var domStrings = UIController.getDomStrings();
     //  Access the gameContainer
     var field = document.getElementById(domStrings.gameContainerID);
@@ -754,11 +778,15 @@ var MainController = (function(DataController, UIController) {
       // 1. UI Stuff
       //      Delete all html items from DOM
       //      Delete current timer value and Date object
+      var idArray = DataController.getGame.getAllIDs();
+      UIController.uiReset(idArray);
       //
       // 2. Data Stuff
       //    Delete all game data
-      //      Including all arrays and delete all objects in game.objects
+      DataController.dataReset();
       // 3. Rerun init()
+      i = 0;
+      MainController.init();
     });
 
 
@@ -801,6 +829,16 @@ var MainController = (function(DataController, UIController) {
       }
     });
 
+    var timerRun = function() {
+      // Create a string to display time
+      // Adds a leading 0 and shows 2 smallest place digits (will probably break if over 99:59) put a : in between minutes and seconds
+      var time = ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
+      //  Update UI with timer value
+      document.getElementById(domStrings.timerMin).innerHTML = time;
+      // Increase the values by 1 second
+      d.setTime(d.getTime() + i);
+    };
+
     // Right click actions
     field.addEventListener('contextmenu', function(e) {
       //  Prevent the right click menu from opening
@@ -813,17 +851,9 @@ var MainController = (function(DataController, UIController) {
         // Set initial minutes and seconds values to 0
         d.setMinutes(0);
         d.setSeconds(0, 0);
-
+        i = 1000;
         // Start an interval, this will repeat every 1000 ms (1 second)
-        setInterval(function() {
-          // Create a string to display time
-          // Adds a leading 0 and shows 2 smallest place digits (will probably break if over 99:59) put a : in between minutes and seconds
-          var time = ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
-          //  Update UI with timer value
-          document.getElementById(domStrings.timerMin).innerHTML = time;
-          // Increase the values by 1 second
-          d.setTime(d.getTime() + 1000);
-        }, 1000); // Wait 1 second to repeat
+        setInterval(timerRun, i); // Wait 1 second to repeat
         timer = true; // Set timer to true so it doesn't restart
       }
       //  Only allow these right click actions if the game is still running
@@ -850,6 +880,7 @@ var MainController = (function(DataController, UIController) {
           if (received === -1) {
             //  Set gameOver to true when bomb is activated (disables clicks)
             gameOver = true;
+            i = 0;
             // TODO: show other bomb locations
           }
           if (received === -2) {
