@@ -9,6 +9,7 @@ Colors used for syntax theme. Should be good highlight colors
 @teal:              #009688;
 @light-teal:        #73d1c8;
 @cyan:              #89DDF3;
+@cyan2:             #03dac6;
 @blue:              #82AAFF;
 @indigo:            #7986CB;
 @purple:            #C792EA;
