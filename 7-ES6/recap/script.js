@@ -653,9 +653,9 @@
 /******************************************
  *      116. Classes with Subclasses      *
  ******************************************/
- /*
-  If there are 2 classees one specific and one less specific such as Person and Athlete. An athelete is a person but a person doesn't have to be an athlete
- */
+/*
+ If there are 2 classees one specific and one less specific such as Person and Athlete. An athelete is a person but a person doesn't have to be an athlete
+*/
 
 // ES5
 // var Person5 = function(name, yearOfBirth, job){
@@ -751,116 +751,220 @@ There are two town elements:
   HINT: Use some of the ES6 features: classes, subclasses, template strings, default parameters, maps, arrow functions, destructuring etc.
 */
 
-// Create a superclass (townAsset) for name and buildYear
-class TownAsset {
-  constructor(name, buildYear){
+/******************************
+ *      117. My Solution      *
+ ******************************/
+
+// /*Create Classes*/
+// // Create a superclass (townAsset) for name and buildYear
+// class TownAsset {
+//   constructor(name, buildYear) {
+//     this.name = name;
+//     this.buildYear = buildYear;
+//   }
+// }
+// // Create a class for parks
+// class Park extends TownAsset {
+//   constructor(name, buildYear, treeCount, parkArea) {
+//     super(name, buildYear);
+//     this.treeCount = treeCount;
+//     this.parkArea = parkArea;
+//   }
+//
+// }
+// // Create a class for streets
+// class Street extends TownAsset {
+//   constructor(name, buildYear, streetLength, streetSize = 'Normal') {
+//     super(name, buildYear);
+//     this.streetLength = streetLength;
+//     this.streetSize = streetSize;
+//   }
+// }
+// // Create objects
+// // Create Park (3) objects
+// function createParks() {
+//   const park0 = new Park('Park0', 2001, 100, 1000);
+//   const park1 = new Park('Park1', 2002, 4000, 2000);
+//   const park2 = new Park('Park2', 2003, 9000, 3000);
+//   const parksMap = new Map();
+//   parksMap.set('park0', park0);
+//   parksMap.set('park1', park1);
+//   parksMap.set('park2', park2);
+//   return parksMap;
+// }
+// const parksMap = createParks();
+// // Create Street (4) objects
+// function createStreets() {
+//   const street0 = new Street('Street0', 2001, 100);
+//   const street1 = new Street('Street1', 2002, 200);
+//   const street2 = new Street('Street2', 2003, 300, 'Normal');
+//   const street3 = new Street('Street3', 2004, 400);
+//
+//   const streetsMap = new Map();
+//   streetsMap.set('Street0', street0);
+//   streetsMap.set('Street1', street1);
+//   streetsMap.set('Street2', street2);
+//   streetsMap.set('Street3', street3);
+//   return streetsMap;
+// }
+// const streetsMap = createStreets();
+//
+//
+// //  1.  Tree density of each park in the town
+// //        formula: number of trees/park area
+//
+// // Loop through parksMap
+// // On each key/value calculate the tree density for that items
+// function treeDensity(map) {
+//   for (let [key, value] of map.entries()) {
+//     const density = value.treeCount / value.parkArea;
+//     const str = `${value.name} has a tree density of ${density} per sq ft`;
+//     console.log(str);
+//   }
+// }
+// treeDensity(parksMap);
+//
+//
+// //  2.  Average age of each town's park
+// //        formula: sum of all ages/number of parks
+// function calcAvgAge(map) {
+//   let total = 0;
+//   for (let [key, value] of map.entries()) {
+//     let age = new Date().getFullYear() - value.buildYear;
+//     total += age;
+//   }
+//   const avg = total / map.size;
+//   const str = `Average park age is ${avg}`;
+//   console.log(str);
+// }
+// calcAvgAge(parksMap);
+//
+// //  3.  The name of the park that has more than 1000 trees
+// function thousandTrees(map) {
+//   for (let [key, value] of map.entries()) {
+//     if (value.treeCount > 1000) {
+//       const str = `${value.name} has more than 1000 trees w/ ${value.treeCount} trees!`;
+//       console.log(str);
+//     }
+//   }
+// }
+// thousandTrees(parksMap);
+//
+// // 4. Total and average length of the town's streets
+// function calcStreets(map) {
+//   let total = 0;
+//   for (let [key, value] of map.entries()) {
+//     total += value.streetLength;
+//   }
+//   const avg = total / map.size;
+//   const str = `The total street length is ${total}, for an average of ${avg}`;
+//   console.log(str);
+// }
+// calcStreets(streetsMap);
+//
+//
+// //  5.  Size classification of all streets:
+// //        tiny/small/normal/big/huge. If size is unknown, the default is normal
+// function sizeClass(map) {
+//   for (let [key, value] of map.entries()) {
+//     const str = `${value.name} has a size of ${value.streetSize}`;
+//     console.log(str);
+//   }
+// }
+// sizeClass(streetsMap);
+
+
+/***********************************
+ *      117. Teacher Solution      *
+ ***********************************/
+
+// Create super class w/ name and build year
+class Element {
+  constructor(name, buildYear) {
     this.name = name;
     this.buildYear = buildYear;
   }
 }
-// Create a class for parks
-  //  Assign TownAsset as the superclass
-class Park extends TownAsset{
-  constructor(name, buildYear, treeCount, parkArea){
+// Create subclass for parks
+class Park extends Element {
+  constructor(name, buildYear, area, numTrees) {
     super(name, buildYear);
-    this.treeCount = treeCount;
-    this.parkArea = parkArea;
+    this.area = area; //km2
+    this.numTrees = numTrees;
   }
 
+  treeDensity() {
+    const density = this.numTrees / this.area;
+    console.log(`${this.name} has a tree density of ${density} trees per square km`);
+  }
 }
 
-
-// Create a class for streets
-  // Assign TownAsset as a superClass
-class Street extends TownAsset{
-  constructor(name, buildYear, streetLength, streetSize = 'Normal'){
+// Create subclass for streets
+class Street extends Element {
+  constructor(name, buildYear, length, size = 3) {
     super(name, buildYear);
-    this.streetLength = streetLength;
-    this.streetSize = streetSize;
+    this.length = length;
+    this.size = size;
+  }
+
+  classifyStreet() {
+    const classification = new Map();
+    classification.set(1, 'tiny');
+    classification.set(2, 'small');
+    classification.set(3, 'normal');
+    classification.set(4, 'big');
+    classification.set(5, 'huge');
+    console.log(`${this.name}, built in ${this.buildYear}, is a ${classification.get(this.size)} street`);
   }
 }
 
-// Create Park (3) objects
-const park0 = new Park('Park0', 2001, 100, 1000);
-const park1 = new Park('Park1', 2002, 4000, 2000);
-const park2 = new Park('Park2', 2003, 9000, 3000);
+const allParks = [new Park('Green Park', 1987, 0.2, 215),
+  new Park('National Park', 1894, 2.9, 3541),
+  new Park('Oak Park', 1953, 0.4, 949)
+];
 
-const parksMap = new Map();
-parksMap.set('park0', park0);
-parksMap.set('park1', park1);
-parksMap.set('park2', park2);
+const allStreets = [new Street('Ocean Avenue', 1999, 1.1, 4),
+  new Street('Evergreen Street', 2008, 2.7, 2),
+  new Street('4th Street', 2015, 0.8),
+  new Street('Sunset Boulevard', 1982, 2.5, 5)
+];
 
-console.log(parksMap);
+function reportParks(p) {
+  console.log(`---------------Parks Report---------------`);
 
-// Create Street (4) objects
-// tiny, small, normal, big, huge
-const street0 = new Street('Street0', 2001, 100);
-const street1 = new Street('Street1', 2002, 200);
-const street2 = new Street('Street2', 2003, 300, 'Normal');
-const street3 = new Street('Street3', 2004, 400);
+  // Density
+  p.forEach(el => el.treeDensity());
 
-const streetsMap = new Map();
-streetsMap.set('Street0', street0);
-streetsMap.set('Street1', street1);
-streetsMap.set('Street2', street2);
-streetsMap.set('Street3', street3);
-console.log(streetsMap);
+  // Average Age
+  const ages = p.map(el => new Date().getFullYear() - el.buildYear);
+  const [totalAge, avgAge] = calc(ages);
+  console.log(`Our ${p.length} parks have an average of ${avgAge} years`);
+  // Which Park has more than 1000 trees
+  const i = p.map(el => el.numTrees).findIndex(el => el >= 1000);
+  console.log(`${p[i].name} has more than 1000 trees`);
 
-
-//  1.  Tree density of each park in the town
-//        formula: number of trees/park area
-
-// Loop through parksMap
-// On each key/value calculate the tree density for that items
-for(let[key, value] of parksMap.entries()){
-  const density = value.treeCount / value.parkArea;
-  const str = `${value.name} has a tree density of ${density} per sq ft`;
-  console.log(str);
 }
 
+function reportStreets(s) {
+  console.log(`---------------Streets Report---------------`);
 
-//  2.  Average age of each town's park
-//        formula: sum of all ages/number of parks
-function calcAvgAge(map){
-  let total = 0;
-  for(let[key, value] of map.entries()){
-    let age = new Date().getFullYear() - value.buildYear;
-    total += age;
-  }
-  const avg = total / map.size;
-  const str = `Average park age is ${avg}`;
-  console.log(str);
-}
-calcAvgAge(parksMap);
+  // Total and average length of the town's streets
+  const [totalLength, avgLength] = calc(s.map(el => el.length));
+  console.log(`Our ${s.length} streets have a total length of ${totalLength} km, with an average of ${avgLength} km.`);
 
-//  3.  The name of the park that has more than 1000 trees
-for(let[key, value] of parksMap.entries()){
-  if(value.treeCount > 1000){
-    const str = `${value.name} has more than 1000 trees w/ ${value.treeCount} trees!`;
-    console.log(str);
-  }
+  // Classify sizes
+  s.forEach(el => el.classifyStreet());
 }
 
+function calc(arr) {
+  const sum = arr.reduce((prev, cur, index) => prev + cur, 0);
 
-// 4. Total and average length of the town's streets
-function calcStreets(map) {
-  let total = 0;
-  for(let[key, value] of map.entries()){
-    total += value.streetLength;
-  }
-  const avg = total / map.size;
-  const str = `The total street length is ${total}, for an average of ${avg}`;
-  console.log(str);
+  return [sum, sum / arr.length];
 }
-calcStreets(streetsMap);
 
-
-//  5.  Size classification of all streets:
-//        tiny/small/normal/big/huge. If size is unknown, the default is normal
-for(let[key, value] of streetsMap.entries()){
-  const str = `${value.name} has a size of ${value.streetSize}`;
-  console.log(str);
-}
+reportParks(allParks);
+console.log('\n');
+reportStreets(allStreets);
 
 
 
