@@ -520,62 +520,367 @@
 /*************************************
  *      113. Default Parameters      *
  *************************************/
+// How to set 1 or more preset parameters
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function generateTitleBlock(lessonNum, title) {
-//   const symbol = '*';
-//   const mRow = `\ ${symbol}      ${lessonNum}. ${title}      ${symbol}`;
-//   const length = mRow.length;
-//   const tRow = `/${symbol.repeat(length - 1)}`;
-//   const bRow = `\ ${symbol.repeat(length -1)}/`;
-//   // window.prompt('Copy text below for title!', tRow + '\n' + mRow + '\n' + bRow);
-//   const final = `${tRow}\n${mRow}\n${bRow}`;
-//   console.log(final);
+// ES5
+// function SmithPerson(firstName, yearOfBirth, lastName, nationality) {
+//   lastName === undefined ? lastName = 'Smith' : lastName = lastName;
+//   nationality === undefined ? nationality = 'American' : nationality = nationality;
+//   this.firstName = firstName;
+//   this.lastName = lastName;
+//   this.yearOfBirth = yearOfBirth;
+//   this.nationality = nationality;
 // }
 //
+// var john = new SmithPerson('John', 1990);
 //
-// generateTitleBlock(113, 'Default Parameters');
+// var emily = new SmithPerson('Emly', 1983, 'Diaz', 'Spanish');
+
+// ES6
+// function SmithPerson(firstName, yearOfBirth, lastName = 'Smith', nationality = 'American'){
+//   this.firstName = firstName;
+//   this.lastName = lastName;
+//   this.yearOfBirth = yearOfBirth;
+//   this.nationality = nationality;
+// }
+//
+// var john= new SmithPerson('John', 1990);
+// var emily = new SmithPerson('Emily', 1990, 'Diaz', 'Spanish');
+
+
+
+/****************************************
+ *      114. Maps (Data Structure)      *
+ ****************************************/
+/* It is common in js to use objects as hashmaps
+    This is attaching string keys to arbitrary values
+    With objects you are limited to strings but with map you can use any kind of primitive value*/
+
+// Set, get, size, has, delete, and clear are the main map functions
+// Set - set a value uses 2 arguements and key and a value x.set(key, value)
+// get - get a value from a map uses 1 arguement the key x.get(key)
+// size - returns the size of the map (how many keys are there?)
+// has - uses 1 argument key. Checks to see if the key exists in the map x.has(key);
+// delete - 1 argument the key that you want to delete. Deletes key and value x.delete(key)
+// clear - clears the entire map of keys and values x.clear()
+
+// const question = new Map();
+//
+// question.set('question', 'What is the official name of the latest major JavaScript verion?');
+// question.set(1, 'ES5');
+// question.set(2, 'ES6');
+// question.set(3, 'ES2015');
+// question.set(4, 'ES7');
+// question.set('correct', 3);
+// question.set(true, 'Correct answer :D');
+// question.set(false, 'Wrong, try again');
+//
+// console.log(question.get('question'));
+// console.log(question.size);
+// //
+// // if(question.has(4)){
+// //   // question.delete(4)
+// //   console.log('Answer 4 is here');
+// // }
+// // question.clear();
+//
+// // Maps also have access to array functions like forEach() and forof
+// // question.forEach((value, key) => console.log(`This is ${key}, and it's set to ${value}`));
+//
+// for(let [key, value] of question.entries()){
+//   if(typeof(key) === 'number'){
+//     console.log(`Answer ${key}: ${value}`);
+//   }
+// }
+//
+// const ans = parseInt(prompt(`Write the correct answer`));
+//
+// console.log(question.get(ans === question.get('correct')));
+//
+// // better because you can use anything as a key
+// // Better because they are iterable
+// // Better becauase it is easy to get the size
+// // Can easily add and remove data from a map
+
+
+
+/****************************************
+ *      115. Classes (Inheritance)      *
+ ****************************************/
+
+//  // ES5
+//  var Person5 = function(name, yearOfBirth, job) {
+//    this.name = name;
+//    this.yearOfBirth = yearOfBirth;
+//    this.job = job;
+//  };
+//
+// Person5.prototype.calculateAge = function() {
+//   var age = new Date().getFullYear - this.yearOfBirth;
+//   console.log(age);
+// };
+//
+// var john5 = new Person5('John', 1990, 'Teacher');
+//
+//
+//
+// // ES6
+// // In ES6 we can create a class and include the constructor and prototype functions directly inside. (constructor and calculateAge)
+// // We can also include static functions but they are not as useful
+//
+// class Person6 {
+//   constructor(name, yearOfBirth, job){
+//     this.name = name;
+//     this.yearOfBirth = yearOfBirth;
+//     this.job = job;
+//   }
+//   calculateAge(){
+//     var age = new Date().getFullYear - this.yearOfBirth;
+//     console.log(age);
+//   }
+//
+//   static greeting(){
+//     console.log('Hey there!');
+//   }
+// }
+//
+// const john6 = new Person6('John', 1990, 'Teacher');
+//
+// Person6.greeting();
+
+
+
+/******************************************
+ *      116. Classes with Subclasses      *
+ ******************************************/
+ /*
+  If there are 2 classees one specific and one less specific such as Person and Athlete. An athelete is a person but a person doesn't have to be an athlete
+ */
+
+// ES5
+// var Person5 = function(name, yearOfBirth, job){
+//   this.name = name;
+//   this.yearOfBirth = yearOfBirth;
+//   this.job =  job;
+// };
+//
+// Person5.prototype.calculateAge = function () {
+//   var age = new Date().getFullYear() - this.yearOfBirth;
+//   console.log(age);
+// };
+//
+// var Athlete5 = function(name, yearOfBirth, job, olympicGames, medals){
+//   // you have to pass this so it assigns the person properties to the new Athlete object
+//   Person5.call(this, name, yearOfBirth, job);
+//   this.olympicGames = olympicGames;
+//   this.medals = medals;
+// };
+//
+//
+// Athlete5.prototype = Object.create(Person5.prototype);
+// Athlete5.prototype.wonMedal = function () {
+//   this.medals++;
+//   console.log(this.medals);
+// };
+//
+// var johnAthlete5 = new Athlete5('John', 1990, 'swimmer', 3, 10);
+
+// ES6
+// class Person6{
+//   constructor(name, yearOfBirth, job){
+//     this.name = name;
+//     this.yearOfBirth = yearOfBirth;
+//     this.job = job;
+//   }
+//   calculateAge(){
+//     var age = new Date().getFullYear() - this.yearOfBirth;
+//     console.log(age);
+//   }
+// }
+//
+// // When creating the subclass you have to say extends and specify the super class. This will assign it as the super class
+// class Athlete6 extends Person6{
+//   constructor(name, yearOfBirth, job, olympicGames, medals){
+//     // The super keyword passes the arguements into the superclass specified above
+//     super(name, yearOfBirth, job);
+//     this.olympicGames = olympicGames;
+//     this.medals = medals;
+//   }
+//
+//   wonMedal(){
+//     this.medals++;
+//     console.log(this.medals);
+//   }
+// }
+//
+// const johnAthlete6 = new Athlete6('John', 1990, 'Swimmer', 3, 10);
+
+
+
+/*************************************
+ *      117. Coding Challenge 8      *
+ *************************************/
+/*
+There are two town elements:
+    1. Parks (3)
+        Both
+          name
+          buildYear
+        only Parks
+          treeCount
+          parkArea
+    2. Streets (4)
+        Both
+          name
+          buildYear
+        only Streets
+          length
+          size classification
+  Generate a report containing:
+  1. Tree density of each park in the town
+      formula: number of trees/park area
+  2. Average age of each town's park
+      formula: sum of all ages/number of parks
+  3. the name of the park that has more than 1000 trees
+  4. Total and average length of the town's streets
+  5. Size classification of all streets:
+      tiny/small/normal/big/huge. If size is unknown, the default is normal
+
+  All the report data should be printed to the console
+
+  HINT: Use some of the ES6 features: classes, subclasses, template strings, default parameters, maps, arrow functions, destructuring etc.
+*/
+
+// Create a superclass (townAsset) for name and buildYear
+class TownAsset {
+  constructor(name, buildYear){
+    this.name = name;
+    this.buildYear = buildYear;
+  }
+}
+// Create a class for parks
+  //  Assign TownAsset as the superclass
+class Park extends TownAsset{
+  constructor(name, buildYear, treeCount, parkArea){
+    super(name, buildYear);
+    this.treeCount = treeCount;
+    this.parkArea = parkArea;
+  }
+
+}
+
+
+// Create a class for streets
+  // Assign TownAsset as a superClass
+class Street extends TownAsset{
+  constructor(name, buildYear, streetLength, streetSize = 'Normal'){
+    super(name, buildYear);
+    this.streetLength = streetLength;
+    this.streetSize = streetSize;
+  }
+}
+
+// Create Park (3) objects
+const park0 = new Park('Park0', 2001, 100, 1000);
+const park1 = new Park('Park1', 2002, 4000, 2000);
+const park2 = new Park('Park2', 2003, 9000, 3000);
+
+const parksMap = new Map();
+parksMap.set('park0', park0);
+parksMap.set('park1', park1);
+parksMap.set('park2', park2);
+
+console.log(parksMap);
+
+// Create Street (4) objects
+// tiny, small, normal, big, huge
+const street0 = new Street('Street0', 2001, 100);
+const street1 = new Street('Street1', 2002, 200);
+const street2 = new Street('Street2', 2003, 300, 'Normal');
+const street3 = new Street('Street3', 2004, 400);
+
+const streetsMap = new Map();
+streetsMap.set('Street0', street0);
+streetsMap.set('Street1', street1);
+streetsMap.set('Street2', street2);
+streetsMap.set('Street3', street3);
+console.log(streetsMap);
+
+
+//  1.  Tree density of each park in the town
+//        formula: number of trees/park area
+
+// Loop through parksMap
+// On each key/value calculate the tree density for that items
+for(let[key, value] of parksMap.entries()){
+  const density = value.treeCount / value.parkArea;
+  const str = `${value.name} has a tree density of ${density} per sq ft`;
+  console.log(str);
+}
+
+
+//  2.  Average age of each town's park
+//        formula: sum of all ages/number of parks
+function calcAvgAge(map){
+  let total = 0;
+  for(let[key, value] of map.entries()){
+    let age = new Date().getFullYear() - value.buildYear;
+    total += age;
+  }
+  const avg = total / map.size;
+  const str = `Average park age is ${avg}`;
+  console.log(str);
+}
+calcAvgAge(parksMap);
+
+//  3.  The name of the park that has more than 1000 trees
+for(let[key, value] of parksMap.entries()){
+  if(value.treeCount > 1000){
+    const str = `${value.name} has more than 1000 trees w/ ${value.treeCount} trees!`;
+    console.log(str);
+  }
+}
+
+
+// 4. Total and average length of the town's streets
+function calcStreets(map) {
+  let total = 0;
+  for(let[key, value] of map.entries()){
+    total += value.streetLength;
+  }
+  const avg = total / map.size;
+  const str = `The total street length is ${total}, for an average of ${avg}`;
+  console.log(str);
+}
+calcStreets(streetsMap);
+
+
+//  5.  Size classification of all streets:
+//        tiny/small/normal/big/huge. If size is unknown, the default is normal
+for(let[key, value] of streetsMap.entries()){
+  const str = `${value.name} has a size of ${value.streetSize}`;
+  console.log(str);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function generateTitleBlock(lessonNum, title) {
+  const symbol = '*';
+  const mRow = `\ ${symbol}      ${lessonNum}. ${title}      ${symbol}`;
+  const length = mRow.length;
+  const tRow = `/${symbol.repeat(length - 1)}`;
+  const bRow = `\ ${symbol.repeat(length -1)}/`;
+  // window.prompt('Copy text below for title!', tRow + '\n' + mRow + '\n' + bRow);
+  const final = `${tRow}\n${mRow}\n${bRow}`;
+  console.log(final);
+}
