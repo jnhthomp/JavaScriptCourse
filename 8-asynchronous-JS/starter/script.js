@@ -247,19 +247,86 @@
 /************************************************************
  *      126. Making AJAX Calls with Fetch and Promises      *
  ************************************************************/
-// we can use fetch to get access to APIs
-// This links to a json file from metaweather containing data
-// Use cors-anywhere to get data. idk why.
-fetch('https://api.darksky.net/forecast/8d6e83ed91024d4f932f6017e9b919fc/37.8267,-122.4233')
+
+// function getWeather(city) {
+//   // we can use fetch to get access to APIs
+//   // This links to a json file from metaweather containing data
+//   // Use cors-anywhere to get data. idk why.
+//   // Normally this fetch would be going to a live server and returning a response
+//   // Since I can't get this to work I can host the json file locally and host the page on a live server in order to fetch the json file
+//   fetch(`./Assets/weather${city}.json`)
+//     .then((result) => {
+//       //  A succesfull fetch will set reult = the Response from the fetch call
+//       //  The fetch call returns something called a response object
+//       console.log(result);
+//       //  The response first has to be processed as json to get the actual data
+//       //  json(); also returns a promise so it must be handled with another .then
+//       return result.json();
+//     }) // The outcome of result.json is a promise that is entered into data of the next then
+//     .then((data) => {
+//       // console.log(data); // Entire JSON object
+//       const today = data.consolidated_weather[0];
+//       console.log(`Temperatures in ${data.title} stay between ${today.min_temp} and ${today.max_temp} degrees celsius`);
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// }
+//
+// getWeather('SF');
+// getWeather('LN');
+
+
+
+/***************************************************************
+ *      127. Making AJAX Calls with Fetch and Async/Await      *
+ ***************************************************************/
+function getWeather(city){
+  fetch(`./Assets/weather${city}.json`)
   .then((result) => {
-    console.log(result);
+    return result.json();
+  })
+  .then((data) => {
+    const today = data.consolidated_weather[0];
+    console.log(`Temperatures today in ${data.title} stay between ${today.min_temp} and ${today.max_temp}.`);
   })
   .catch((error) => {
     console.log(error);
   });
+}
+getWeather(`SF`);
+getWeather(`LN`);
 
 
+//  Now do similar to the top but with ASYNC/AWAIT (Leaving the above for comparison)
+async function getWeatherAW(city) {
+  //  Catch any errors with async await
+  //  Wrap everything that should happen if there are no errors in the try statement
+  //  Then enter what should happen in a catch  statement
+  try{const result = await fetch(`./Assets/weather${city}.json`);
+  const data = await result.json();
+  const tomorrow = data.consolidated_weather[1];
+  console.log(`Temperatures tomorrow in ${data.title} stay between ${tomorrow.min_temp} and ${tomorrow.max_temp} degrees celsius`);
+  return data;
+}
+  //  What should happen if there is an error
+  catch(error){
+    console.log(error);
+  }
+}
 
+let dataSF;
+getWeatherAW('SF')
+.then((data) => {
+  dataSF = data;
+  console.log(dataSF);
+});
+let dataLondon;
+getWeatherAW('LN')
+.then((data) => {
+  dataLondon = data;
+  console.log(dataLondon);
+});
 
 
 

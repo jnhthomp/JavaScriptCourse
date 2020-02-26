@@ -24,3 +24,7 @@ Atom Packages:
 
 UI Theme: Atom Material
 Syntax Theme: Atom Material
+
+
+
+git-plus
