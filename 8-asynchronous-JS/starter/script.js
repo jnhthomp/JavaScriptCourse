@@ -281,18 +281,18 @@
 /***************************************************************
  *      127. Making AJAX Calls with Fetch and Async/Await      *
  ***************************************************************/
-function getWeather(city){
+function getWeather(city) {
   fetch(`./Assets/weather${city}.json`)
-  .then((result) => {
-    return result.json();
-  })
-  .then((data) => {
-    const today = data.consolidated_weather[0];
-    console.log(`Temperatures today in ${data.title} stay between ${today.min_temp} and ${today.max_temp}.`);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+    .then((result) => {
+      return result.json();
+    })
+    .then((data) => {
+      const today = data.consolidated_weather[0];
+      console.log(`Temperatures today in ${data.title} stay between ${today.min_temp} and ${today.max_temp}.`);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 getWeather(`SF`);
 getWeather(`LN`);
@@ -303,30 +303,31 @@ async function getWeatherAW(city) {
   //  Catch any errors with async await
   //  Wrap everything that should happen if there are no errors in the try statement
   //  Then enter what should happen in a catch  statement
-  try{const result = await fetch(`./Assets/weather${city}.json`);
-  const data = await result.json();
-  const tomorrow = data.consolidated_weather[1];
-  console.log(`Temperatures tomorrow in ${data.title} stay between ${tomorrow.min_temp} and ${tomorrow.max_temp} degrees celsius`);
-  return data;
-}
+  try {
+    const result = await fetch(`./Assets/weather${city}.json`);
+    const data = await result.json();
+    const tomorrow = data.consolidated_weather[1];
+    console.log(`Temperatures tomorrow in ${data.title} stay between ${tomorrow.min_temp} and ${tomorrow.max_temp} degrees celsius`);
+    return data;
+  }
   //  What should happen if there is an error
-  catch(error){
+  catch (error) {
     console.log(error);
   }
 }
 
 let dataSF;
 getWeatherAW('SF')
-.then((data) => {
-  dataSF = data;
-  console.log(dataSF);
-});
+  .then((data) => {
+    dataSF = data;
+    console.log(dataSF);
+  });
 let dataLondon;
 getWeatherAW('LN')
-.then((data) => {
-  dataLondon = data;
-  console.log(dataLondon);
-});
+  .then((data) => {
+    dataLondon = data;
+    console.log(dataLondon);
+  });
 
 
 
@@ -353,32 +354,7 @@ getWeatherAW('LN')
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/***********************************************************************************************************************************************************/
 
 
 
@@ -396,3 +372,8 @@ const tools = (function() {
     }
   };
 }());
+
+/* Linter */
+// Keeps a few linter non errors from popping up
+/*j?shint esversion: 6 */ // Do not include (?)
+/*j?shint esversion: 8*/ // Do not include(?)
