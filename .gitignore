@@ -1,0 +1,15 @@
+#Git ignore for files that should not be committed/pushed
+
+# editor settings
+# files for ide to not lint certain files
+#/.jshintignore
+
+# Generated files
+/9-forkify/starter/dist/js/*
+/9-forkify/starter/dist/index.html
+
+# Installable dependencies
+/9-forkify/starter/node_modules
+
+
+# ADD DS_Store at some point
