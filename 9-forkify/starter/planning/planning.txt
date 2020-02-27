@@ -1,0 +1,67 @@
+Forkify
+
+General
+Recipe Searching App
+
+Use a search bar to search for a recipe
+
+Connect to a real api to retrieve matching recipes
+
+Matching recipes are returned to the left side container
+  There can be multiple pages of results that get displayed
+  These pages can be flipped through without reloading the page
+
+Selecting a recipe on the left will load the recipe in the center
+
+Clicking favIcon will add the recipe to favorites list
+  favorites are saved so that information stays after reloading
+
+Clicking add to shopping list will add all the items in Ingredients section to the shopping list
+
+
+
+
+/*Make this my own*/
+Create a database that can store all of our Hello Fresh recipes that we have gotten so far
+Create entries for each recipe containing ingredients, instructions, cook time and an image of the dish
+Allow others to submit their own forms
+Link shopping list to an amazon search for each item to add to amazon cart
+
+
+
+
+
+_____________________________________________________
+|                                                    |
+|   _____________________________________________    |
+|   |                                            |   |
+|   |                [====]Search                |   |
+|   |____________________________________________|   |
+|   |        |  ______________________  |        |   |
+|   |        |  |                     | |Shopping|   |
+|   |result1 |  |         video       | |  List  |   |
+|   |result2 |  |         area        | |        |   |
+|   |result3 |  |_____________________| | item1  |   |
+|   |...     |                          | item2  |   |
+|   |...     |   prepInfo       favicon | item3  |   |
+|   |...     |                          | item4  |   |
+|   |        |                          | ...    |   |
+|   |        |       Ingredients        | ...    |   |
+|   |        |  (add to shopping list)  | ...    |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |       Instructions       |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |        |                          |        |   |
+|   |________|__________________________|________|   |
+|                                                    |
+|____________________________________________________|
