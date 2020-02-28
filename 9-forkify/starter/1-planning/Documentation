@@ -1,0 +1,98 @@
+Forkify App
+
+This website will use a modern development/production environment.
+There should be 3 main display containers (other small ones)
+  Search results, Selected Recipe Content, Shopping List
+It should allow a user to search for a recipe.
+An api should be used to search and display matching recipes on the left
+Selecting a recipe should display more recipe information in the middle container
+Clicking add to shoppng list should add all of the ingredients of that recipe to the shopping list container on the left
+
+Setup
+
+Project will use a modern development and production environment.
+The following will be used
+
+Vanilla JS
+Node JS
+Node JS devDependencies:
+  babel-core
+  babel-loader
+  babel-preset-env
+  html-webpack plugin
+  webpack
+  webpack-cli
+  webpack-dev-server
+Node JS dependencies
+  babel-polyfill
+
+Setup Process
+package.json
+  Node JS uses package.json to list important information regarding what dependencies exist in the current project as well as what version they are on.
+
+  scripts:
+    package.json includes a section called scripts where commands can be set to run from terminal while in "9-forkify/starter"
+    The scripts run as if they were called from the terminal
+    dev: runs webpack to bundle JS and HTML (because of html-webpack-plugin in webpack.config.js). This will output a JS file to /dist/js/bundle.js and an HTML file to /dist/index.html because of the html-webpack-plugin. Since development mode is specified the code will not be minified
+    build: compiles in the same way that dev does but this time it will minify the code
+    start: starts a live server that will run a live version of /dist/index.html locally. This should also compile like the dev script. Any changes saved while this is running should be reflected in the live page
+
+  devDependencies
+    These dependencies can be installed from terminal while in "9-forkify/setup>" wih "$npm install".
+    Npm install will look at package.json and install all listed devDependencies and dependencies.
+    babel-core
+      Core for babel. Will be used to serve appropriate JS versions depending on the browser that is used
+    babel-loader
+      Allows transpiled js to be used with webpack
+    babel-preset-env
+      Sets predefined environment setting options
+    html-webpack-plugin
+      Will allow HTML to be bundled when webpack is run instead of just JS
+    webpack
+      Bundles multiple JS files into one file for easier coding and faster loading. Can also minify files.
+    webpack-cli
+      Allows webpack commands from terminal
+    webpack-dev-server
+      Runs a live version of the page locally that will update and refresh when changes are saved
+
+  dependencies
+    webpack
+      babel-polyfill
+        Used to generate JS for things that cannot be transpiled. Will emulate APIs to try to use JS features that aren't available to the browser
+
+.babelrc
+  Stores preset environment settings that babel will look at and use to transpile code
+  presets
+    defines peset settings from babel-preset-env
+    In this case we are going to be transpiling and polyfilling for the last 5 versions of browsers and Internet explorer browsers version 8 or above
+
+webpack.config.js
+  Stores webpack settings
+  entry
+    What files will webpack be receiving to bundle?
+      babel-polyfill (what babel will return after polyfilling code)
+      ./src/js/index.js (the main js page that we will be using)
+        When index.js imports from other files webpack will automatically know to include them in the bundle
+  output
+    Where should bundled js files be put?
+    path: describes the folder that the bundled js file should go
+    filename: What to name the bundled js
+
+  devServer:
+    Describes the folder to be used when running the page locally
+    In the case ./dist will be used because after webpack and babel process the html and js that is where the webpage will be stored
+
+  plugins:
+    This section can be used to set settings for multiple plugins. Right now there is only 1
+    Html Webpack plugin
+      sets settings of HtmlWebpackPlugin
+      filename: what the output HTML file will be named after running webpack on it. Will be saved to where output is set above
+      template: the file that we will run webpack on
+
+    module
+      Used to setup the babel-loader
+      rules:
+        What loaders will be used and how
+        test: this specifies that all files that end in .js (all javascript files)
+        exclude: Don't use the loader on these files. There are a bunch of files in nod_modules that will add a lot of time to run babel on. A lot of these don't ever run on the page and if any do then they will be caught by the index.js
+        use: list loaders to use here. babel-loader is the only one for this prooject
