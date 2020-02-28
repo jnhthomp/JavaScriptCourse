@@ -11,5 +11,7 @@
 # Installable dependencies
 /9-forkify/starter/node_modules
 
+/work
+
 
 # ADD DS_Store at some point
