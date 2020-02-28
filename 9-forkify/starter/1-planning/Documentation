@@ -96,4 +96,4 @@ webpack.config.js
         What loaders will be used and how
         test: this specifies that all files that end in .js (all javascript files)
         exclude: Don't use the loader on these files. There are a bunch of files in nod_modules that will add a lot of time to run babel on. A lot of these don't ever run on the page and if any do then they will be caught by the index.js
-        use: list loaders to use here. babel-loader is the only one for this prooject
+        use: list loaders to use here. babel-loader is the only one for this project
