@@ -28,6 +28,7 @@ Node JS dependencies
 
 Setup Process
 package.json
+  Created with npm init in root of project folder
   Node JS uses package.json to list important information regarding what dependencies exist in the current project as well as what version they are on.
 
   scripts:
