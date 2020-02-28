@@ -65,3 +65,42 @@ _____________________________________________________
 |   |________|__________________________|________|   |
 |                                                    |
 |____________________________________________________|
+
+
+
+
+
+Architecture (MVC) (Model View Controller)
+
+Controller
+
+  index.js
+    Will coordinate functions between models and views to encourage separation of concerns
+
+Models (Focuses on Data retrieval and submission)
+
+  search.js
+    Will reach out to API to get search results and return them to controller
+
+  recipe.js
+    Will retrieve and process recipe information from API and forward data to the controller
+
+  list.js
+    Will retrieve and process shopping list data and return it to the controller
+
+  likes.js
+    Will retrieve and store like data from the user
+
+Views (gives and receives user data)
+
+  searchView.js
+    Will send user search input to controller and display data received from the controller in search results area
+
+  recipeView.js
+    Will receive recipe data from controller and display it to the user
+
+  listView.js
+    Will receive shopping list data from the controller and display it to the user
+
+  likesVies.js
+    Will receive likes data from controller to display to the user. Will let the controller know when a user likes/unlikes a recipe
