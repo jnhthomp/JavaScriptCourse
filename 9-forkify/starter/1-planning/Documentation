@@ -8,6 +8,14 @@ An api should be used to search and display matching recipes on the left
 Selecting a recipe should display more recipe information in the middle container
 Clicking add to shoppng list should add all of the ingredients of that recipe to the shopping list container on the left
 
+
+
+********************************************************************************
+********************************************************************************
+********************************************************************************
+
+
+
 Setup
 
 Project will use a modern development and production environment.
@@ -25,8 +33,20 @@ Node JS devDependencies:
   webpack-dev-server
 Node JS dependencies
   babel-polyfill
+  axios
+
+
+
+
+
+********************************************************************************
+********************************************************************************
+********************************************************************************
+
+
 
 Setup Process
+
 package.json
   Created with npm init in root of project folder
   Node JS uses package.json to list important information regarding what dependencies exist in the current project as well as what version they are on.
@@ -97,3 +117,86 @@ webpack.config.js
         test: this specifies that all files that end in .js (all javascript files)
         exclude: Don't use the loader on these files. There are a bunch of files in nod_modules that will add a lot of time to run babel on. A lot of these don't ever run on the page and if any do then they will be caught by the index.js
         use: list loaders to use here. babel-loader is the only one for this project
+
+
+
+
+
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+
+
+
+Architecture (MVC)
+
+Controller
+  index.js
+    This is the main js component of the app. It coordinates interactions between the models and their view counterparts
+
+    Imports
+      Tools
+        Used for development only. Class that I will add tools to for debugging
+      Search
+        This connects the Search model to the controller. It contains functions related to retrieving matches for search queries and returning the results
+
+    Objects
+      state
+        Monitors current values regarding states of the app and current information
+        -Search object
+        -Current recipe object
+        -Shopping list object
+        -Liked Recipes
+
+    Functions
+      controlSearch
+        Communicates with both Search and searchView
+        Retrieves Search results from user -> forwards query to the API -> receives results from PAI -> update UI with results
+        1. Get query from view
+        2. If there is a query then create a new search object and add it to the state
+        3. Prepare the UI for results
+        4. Search for recipes
+        5. Render results on UI
+
+      Event Listeners
+      '.search'
+        listens for a click on submit button and runs controlSearch when clicked to search for matching recipes
+
+Models (gives and receives API data/queries, background tasks)
+
+  search.js
+    Will reach out to API to get search results and return them to controller
+    1. Accept a query
+    2. Retrieve the results
+    3. Isolate the list of recipes from everything else returned by the API
+    4. Save this list as a property of this object (to be accessed by index.js)
+
+  recipe.js
+    Will retrieve and process recipe information from API and forward data to the controller
+
+  list.js
+    Will retrieve and process shopping list data and return it to the controller
+
+  likes.js
+    Will retrieve and store like data from the user
+
+
+Views (gives and receives user data)
+
+  searchView.js
+    Will send user search input to controller and display data received from the controller in search results area
+
+  recipeView.js
+    Will receive recipe data from controller and display it to the user
+
+  listView.js
+    Will receive shopping list data from the controller and display it to the user
+
+  likesVies.js
+    Will receive likes data from controller to display to the user. Will let the controller know when a user likes/unlikes a recipe
+
+
+
+********************************************************************************
+********************************************************************************
+********************************************************************************
