@@ -2,20 +2,21 @@
 
 
 /* Imports */
-import Tools from './tools';
-import Search from './models/Search';
+import Tools from './tools'; // Tools to help me troubleshoot
+import Search from './models/Search'; //  Handles search results retrieval
 
 /*  Global state of the app
 |*    -Search object
 |*    -Current recipe object
 |*    -Shopping list object
 |*    -Liked Recipes
+|*    -Time? (for last reload)
 |*/
 const state = {};
 
 
 
-
+//  Retrieves search results from user -> forwards query to the API -> receives results from API -> Updates UI with results
 const controlSearch = async () => {
   //  1. Get query from view
   const query = 'pizza'; // TODO: read data from user from search view module
@@ -35,6 +36,9 @@ const controlSearch = async () => {
 };
 
 
+
+//  Event listener for user search. Listens for a click on the search button and runs controlSearch()
+//  TODO: set up event listener to search user input on "ENTER" keypress too
 document.querySelector('.search').addEventListener('submit', (e) => {
   e.preventDefault();
   controlSearch();
