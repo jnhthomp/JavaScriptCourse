@@ -4,9 +4,11 @@
 /* Imports */
 import * as tools from './tools'; // Tools to help me troubleshoot
 import Search from './models/Search'; //  Handles search results retrieval
-import * as searchView from './views/searchView';
+import * as searchView from './views/searchView'; // Update UI-search funcitons
 import {
-  elements
+  elements, // DOM strings
+  renderLoader, // Create loading icon
+  clearLoader // Delete loading icon
 } from './views/base'; // Holds DOM strings
 
 /*  Global state of the app
@@ -33,11 +35,13 @@ const controlSearch = async () => {
     //  3. Prepare UI for results
     searchView.clearResults(); // Clear any previously generated results
     searchView.clearInput(); // Clear the query from search field
+    renderLoader(elements.searchRes); // Delete loading icon
 
     //  4. Search for recipes
     await state.search.getResults();
 
     //  5. Render results on UI
+    clearLoader(); // Delete loading icon
     searchView.renderResults(state.search.result);
   }
 };
