@@ -185,6 +185,26 @@ Views (gives and receives user data)
 
   searchView.js
     Will send user search input to controller and display data received from the controller in search results area
+    functions
+      getInput()
+        1. gets value from the search field and returns it
+
+      clearInput()
+        1. Resets the search field value to an empty string
+
+      clearResults()
+        1. Removes html list items from results list
+
+      renderRecipe(recipe) (a single recipe object)
+        1. Contains a string of HTML
+        2. Modifies it with values from the recipe object that was passed
+        3. Adds the modified HTML to the results list to generate a result in UI
+
+      renderResults(recipes) (array of all recipe object results)
+        1. runs a loop on each object in the passed array
+        2. runs renderRecipe() on every object in the array
+        3. Creates updated recipe list in UI with all recipes in array
+
 
   recipeView.js
     Will receive recipe data from controller and display it to the user
