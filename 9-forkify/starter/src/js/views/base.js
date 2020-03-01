@@ -3,7 +3,8 @@ export const elements = {
   searchForm: document.querySelector('.search'),
   searchInput: document.querySelector('.search__field'),
   searchRes: document.querySelector('.results'),
-  searchResList: document.querySelector('.results__list')
+  searchResList: document.querySelector('.results__list'),
+  searchResPages: document.querySelector('.results__pages')
 };
 
 // Used to hold DOM strings without the period for use inside of html

@@ -55,8 +55,24 @@ elements.searchForm.addEventListener('submit', (e) => {
   controlSearch();
 });
 
+//  Event listener to change pages in recipe search results area
+//  Listens for a click anywhere in
+elements.searchResPages.addEventListener('click', (e) => {
+  //  gets the html of a clicked thing if it has a class of .btn-inline
+  const btn = e.target.closest('.btn-inline');
+  if (btn) {
+    //  Sets the page number that the button will lead to
+    //  dataset.goto is a value saved in html in data-goto. It is calculated by the current page +/- 1 depending on prevous or next
+    //   Must use parseInt or it will be saved as a string
+    const goToPage = parseInt(btn.dataset.goto, 10);
 
+    // Clear prevous results before displaying the next results
+    searchView.clearResults();
 
+    // Generate next set of search results and btns if needed
+    searchView.renderResults(state.search.result, goToPage);
+  }
+});
 
 
 
