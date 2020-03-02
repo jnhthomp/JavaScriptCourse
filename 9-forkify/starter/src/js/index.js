@@ -2,8 +2,9 @@
 
 
 /* Imports */
-import * as tools from './tools'; // Tools to help me troubleshoot
+import * as Tools from './tools'; // Tools to help me troubleshoot
 import Search from './models/Search'; //  Handles search results retrieval
+import Recipe from './models/Recipe'; // Handles recipe results retrieval
 import * as searchView from './views/searchView'; // Update UI-search funcitons
 import {
   elements, // DOM strings
@@ -77,6 +78,12 @@ elements.searchResPages.addEventListener('click', (e) => {
 
 
 
+/*
+ *  Recipe Controller
+ */
+const r = new Recipe(47746);
+r.getRecipe();
+console.log(r);
 
 
 
@@ -96,5 +103,4 @@ elements.searchResPages.addEventListener('click', (e) => {
 
 
 
-
-console.log(tools.logTime());
+console.log(Tools.logTime());
