@@ -6,10 +6,11 @@ import * as Tools from './tools'; // Tools to help me troubleshoot
 import Search from './models/Search'; //  Handles search results retrieval
 import Recipe from './models/Recipe'; // Handles recipe results retrieval
 import * as searchView from './views/searchView'; // Update UI-search funcitons
+import * as recipeView from './views/recipeView';
 import {
   elements, // DOM strings
   renderLoader, // Create loading icon
-  clearLoader // Delete loading icon
+  clearLoader, // Delete loading icon
 } from './views/base'; // Holds DOM strings
 
 /*  Global state of the app
@@ -96,6 +97,13 @@ const controlRecipe = async () => {
   console.log(id);
   if (id) {
     // Prepare UI for changes
+    recipeView.clearRecipe();
+    renderLoader(elements.recipe);
+
+    // Highlight selected search item
+    if (state.search) {
+      searchView.highlightSelected(id);
+    }
 
     // Create new recipe object
     state.recipe = new Recipe(id);
@@ -104,7 +112,7 @@ const controlRecipe = async () => {
     try {
       // Get Recipe data and parse ingredients
       await state.recipe.getRecipe();
-      console.log(state.recipe.ingredient);
+      console.log(state.recipe);
       state.recipe.parseIngredients();
 
       // Calculate servings and time
@@ -112,7 +120,8 @@ const controlRecipe = async () => {
       state.recipe.calcServings();
 
       // Render recipe
-      console.log(state.recipe);
+      clearLoader();
+      recipeView.renderRecipe(state.recipe);
 
     } catch (err) {
       alert('Error processing recipe');
