@@ -16,6 +16,13 @@ export const clearResults = () => {
   elements.searchResPages.innerHTML = ''; // Remove prev/next page btns
 };
 
+export const highlightSelected = (id) => {
+  const resultsArr = Array.from(document.querySelectorAll('.results__link'));
+  resultsArr.forEach((el) => {
+    el.classList.remove('results__link--active');
+  });
+  document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+};
 
 // Prevents overflow onto second line in recipe list for longer titles
 const limitRecipeTitle = (title, limit = 17) => {
