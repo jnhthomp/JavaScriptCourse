@@ -21,11 +21,11 @@ export const highlightSelected = (id) => {
   resultsArr.forEach((el) => {
     el.classList.remove('results__link--active');
   });
-  document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+  document.querySelector(`.results__link[href="#${id}"]`).classList.add('results__link--active');
 };
 
 // Prevents overflow onto second line in recipe list for longer titles
-const limitRecipeTitle = (title, limit = 17) => {
+export const limitRecipeTitle = (title, limit = 17) => {
   // Createa an array to store the new title in
   const newTitle = [];
   // Checks if the title is too long or not.
