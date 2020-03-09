@@ -104,3 +104,15 @@ Views (gives and receives user data)
 
   likesVies.js
     Will receive likes data from controller to display to the user. Will let the controller know when a user likes/unlikes a recipe
+
+
+
+
+/*BONUS FEATURES*/
+-Button to delete all shopping list items
+-Add ability to manually add items to shopping list
+-Save shopping list data in local storage
+-Improve the ingredient parsing algorithm
+-Come up with an algorithm for calculating the amount of servings
+-Improve error handling
+-Dark mode

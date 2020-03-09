@@ -25,7 +25,8 @@ import {
 |*    -Time? (for last reload)
 |*/
 const state = {};
-window.state = state;
+
+
 
 
 //  Retrieves search results from user -> forwards query to the API -> receives results from API -> Updates UI with results
@@ -33,7 +34,7 @@ const controlSearch = async () => {
   //  1. Get query from view
   const query = searchView.getInput();
 
-  console.log(query);
+
 
   //  2. If there is a query then create a new search object and add it to state
   if (query) {
@@ -98,7 +99,7 @@ elements.searchResPages.addEventListener('click', (e) => {
 const controlRecipe = async () => {
   // Get ID from URL
   const id = window.location.hash.replace('#', '');
-  console.log(id);
+
   if (id) {
     // Prepare UI for changes
     recipeView.clearRecipe();
@@ -116,7 +117,7 @@ const controlRecipe = async () => {
     try {
       // Get Recipe data and parse ingredients
       await state.recipe.getRecipe();
-      console.log(state.recipe);
+
       state.recipe.parseIngredients();
 
       // Calculate servings and time
@@ -172,7 +173,7 @@ const controlLike = () => {
 
     // Add like to UI list
     likesView.renderLike(newLike);
-    console.log(state.likes);
+
     // User has liked recipe
   } else {
     // Remove like from state
@@ -199,7 +200,7 @@ window.addEventListener('load', () => {
 // handle delete and update list item events
 elements.shopping.addEventListener('click', (e) => {
   const id = e.target.closest('.shopping__item').dataset.itemid;
-  console.log(id);
+
 
   // Handle delete button event
   if (e.target.matches('.shopping__delete, .shopping__delete *')) {
@@ -244,19 +245,3 @@ elements.recipe.addEventListener('click', (e) => {
 
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-console.log(Tools.logTime());
